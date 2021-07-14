@@ -1,4 +1,4 @@
-package com.dnd10.iterview.entity;
+package com.dnd10.iterview.config.jwt;
 
 import lombok.Getter;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

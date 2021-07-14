@@ -1,4 +1,4 @@
-package com.dnd10.iterview.jwt;
+package com.dnd10.iterview.config.jwt;
 
 public interface JwtProperties {
     String SECRET = "iterview";

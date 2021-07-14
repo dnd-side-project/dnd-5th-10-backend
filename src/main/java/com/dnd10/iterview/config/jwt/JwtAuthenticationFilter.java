@@ -1,8 +1,8 @@
-package com.dnd10.iterview.jwt;
+/*package com.dnd10.iterview.config.jwt;
 
 import com.dnd10.iterview.dto.UserDto;
 import com.dnd10.iterview.entity.User;
-import com.dnd10.iterview.entity.UserPrincipal;
+import com.dnd10.iterview.config.jwt.UserPrincipal;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -59,4 +59,4 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 .sign(Algorithm.HMAC256(JwtProperties.SECRET));
         response.addHeader(JwtProperties.HEADER_STRING, JwtProperties.TOKEN_PREFIX + jwtToken);
     }
-}
+}*/

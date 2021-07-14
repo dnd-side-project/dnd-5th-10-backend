@@ -1,11 +1,10 @@
 package com.dnd10.iterview.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Getter
@@ -27,6 +26,13 @@ public class User {
     @Column(unique = true, nullable = false)
     private String username; // nickname
 
+    @JsonIgnore
     @Column(unique = true, nullable = false)
     private String password;
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private AuthProvider provider;
+
+    private String providerId;
 }

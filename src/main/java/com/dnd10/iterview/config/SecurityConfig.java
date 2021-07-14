@@ -1,18 +1,22 @@
 package com.dnd10.iterview.config;
 
-import com.dnd10.iterview.jwt.JwtAuthenticationFilter;
-import com.dnd10.iterview.jwt.JwtAuthorizationFilter;
+//import com.dnd10.iterview.config.jwt.JwtAuthenticationFilter;
+import com.dnd10.iterview.config.oauth2.CustomOAuth2SuccessHandler;
+import com.dnd10.iterview.config.oauth2.CustomOAuth2UserService;
+import com.dnd10.iterview.config.jwt.JwtAuthorizationFilter;
 import com.dnd10.iterview.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestRedirectFilter;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -21,6 +25,12 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    @Autowired
+    private CustomOAuth2SuccessHandler customOAuth2SuccessHandler;
+
+    @Autowired
+    private CustomOAuth2UserService customOAuth2UserService;
 
     private final UserRepository userRepository;
     private final CorsConfig corsConfig;
@@ -37,19 +47,26 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .formLogin().disable()
                 .httpBasic().disable();
         http
-                .addFilter(new JwtAuthenticationFilter(authenticationManager()))
-                .addFilter(new JwtAuthorizationFilter(authenticationManager(), userRepository))
+                //.addFilter(new JwtAuthenticationFilter(authenticationManager()))
                 .authorizeRequests()
-                .mvcMatchers("/", "/login", "/error", "/webjars/**").permitAll()
-                .anyRequest().authenticated();
+                .antMatchers("/", "/login", "/error", "/webjars/**").permitAll()
+                .anyRequest().authenticated()
+                .and()
+                .oauth2Login()
+                .loginPage("/login")
+                .userInfoEndpoint().userService(customOAuth2UserService)
+                .and()
+                .successHandler(customOAuth2SuccessHandler);
+
+        http.addFilterBefore(new JwtAuthorizationFilter(/*authenticationManager(), userRepository*/), UsernamePasswordAuthenticationFilter.class);
 
         /*http
                 .oauth2Login()
                 .authorizationEndpoint()
-                .baseUri("/oauth2/authorize")
-                .and()
-                .userInfoEndpoint()
-                .userService(customOAuth2UserService);*/
+                .baseUri("/oauth2/authorize");
+                //.and()
+                //.userInfoEndpoint()
+                //.userService(customOAuth2UserService);*/
     }
 
     @Bean
