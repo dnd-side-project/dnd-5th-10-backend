@@ -43,10 +43,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .mvcMatchers("/", "/login", "/error", "/webjars/**").permitAll()
                 .anyRequest().authenticated();
 
-       /* http
+        /*http
                 .oauth2Login()
                 .authorizationEndpoint()
-                .baseUri("/oauth2/authorize");*/
+                .baseUri("/oauth2/authorize")
+                .and()
+                .userInfoEndpoint()
+                .userService(customOAuth2UserService);*/
     }
 
     @Bean
