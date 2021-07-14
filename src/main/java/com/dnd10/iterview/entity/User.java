@@ -25,8 +25,8 @@ public class User {
     private String email;
 
     @Column(unique = true, nullable = false)
-    private String oAuth2Id;
+    private String username; // nickname
 
     @Column(unique = true, nullable = false)
-    private String nickname;
+    private String password;
 }
