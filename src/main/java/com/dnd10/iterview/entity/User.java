@@ -27,7 +27,7 @@ public class User {
     private String username; // nickname
 
     @JsonIgnore
-    @Column(unique = true, nullable = false)
+    @Column(unique = true, nullable = true)
     private String password;
 
     @NotNull

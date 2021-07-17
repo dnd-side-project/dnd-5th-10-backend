@@ -35,7 +35,7 @@ public class CustomOAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHa
                 .sign(Algorithm.HMAC256(JwtProperties.SECRET));
         response.addHeader(JwtProperties.HEADER_STRING, JwtProperties.TOKEN_PREFIX + jwtToken);
 
-        //getRedirectStrategy().sendRedirect(request, response, frontendAppEntryPage);
+        getRedirectStrategy().sendRedirect(request, response, "http://localhost:8080/");
 
     }
 }
