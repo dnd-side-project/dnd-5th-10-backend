@@ -51,10 +51,10 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         String email = build.verify(token).getClaim("email").asString();
 
         // no usage
-        Map<String, Object> attributes = new HashMap<>();
+        /*Map<String, Object> attributes = new HashMap<>();
         for (Map.Entry<String, Claim> entry : decode.getClaims().entrySet()) {
             attributes.put(entry.getKey(), (Object) entry.getValue());
-        }
+        }*/
 
         if (email != null) {
             final Optional<User> oUser = userRepository.findUserByEmail(email);

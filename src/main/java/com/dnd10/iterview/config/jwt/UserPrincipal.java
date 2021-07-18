@@ -1,4 +1,4 @@
-package com.dnd10.iterview.config.jwt;
+/*package com.dnd10.iterview.config.jwt;
 
 import lombok.Getter;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -14,4 +14,4 @@ public class UserPrincipal extends User {
         super(user.getEmail(), user.getPassword(), List.of(new SimpleGrantedAuthority("ROLE_USER")));
         this.user = user;
     }
-}
+}*/
