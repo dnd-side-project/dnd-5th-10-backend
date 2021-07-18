@@ -6,7 +6,6 @@ import com.dnd10.iterview.config.oauth2.CustomOAuth2UserService;
 import com.dnd10.iterview.config.jwt.JwtAuthorizationFilter;
 import com.dnd10.iterview.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,7 +14,6 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestRedirectFilter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -26,12 +24,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Autowired
-    private CustomOAuth2SuccessHandler customOAuth2SuccessHandler;
-
-    @Autowired
-    private CustomOAuth2UserService customOAuth2UserService;
-
+    private final CustomOAuth2SuccessHandler customOAuth2SuccessHandler;
+    private final CustomOAuth2UserService customOAuth2UserService;
     private final UserRepository userRepository;
     private final CorsConfig corsConfig;
 
@@ -58,7 +52,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .successHandler(customOAuth2SuccessHandler);
 
-        http.addFilterBefore(new JwtAuthorizationFilter(/*authenticationManager(), userRepository*/), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(jwtAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
 
         /*http
                 .oauth2Login()
@@ -67,6 +61,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 //.and()
                 //.userInfoEndpoint()
                 //.userService(customOAuth2UserService);*/
+    }
+
+    @Bean
+    public JwtAuthorizationFilter jwtAuthorizationFilter() throws Exception {
+        return new JwtAuthorizationFilter(userRepository);
     }
 
     @Bean
