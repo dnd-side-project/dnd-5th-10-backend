@@ -7,31 +7,28 @@ import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.dnd10.iterview.entity.User;
 import com.dnd10.iterview.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
-import org.springframework.web.filter.OncePerRequestFilter;
-
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
-    @Autowired
-    private UserRepository userRepository;
 
-    /*public JwtAuthorizationFilter(AuthenticationManager authenticationManager, UserRepository userRepository) {
-        super(authenticationManager);
+    private final UserRepository userRepository;
+    public JwtAuthorizationFilter(UserRepository userRepository) {
         this.userRepository = userRepository;
-    }*/
+    }
+
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException, IOException {
@@ -53,25 +50,34 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
         String email = build.verify(token).getClaim("email").asString();
 
+        // no usage
         Map<String, Object> attributes = new HashMap<>();
         for (Map.Entry<String, Claim> entry : decode.getClaims().entrySet()) {
             attributes.put(entry.getKey(), (Object) entry.getValue());
         }
 
         if (email != null) {
-            User user = userRepository.findByEmail(email).get();
-            UserPrincipal userAccount = new UserPrincipal(user);
+            final Optional<User> oUser = userRepository.findUserByEmail(email);
+            final User user = oUser.orElse(User.builder().build());
+//            UserPrincipal userAccount = new UserPrincipal(user);
+//            UsernamePasswordAuthenticationToken userToken = new UsernamePasswordAuthenticationToken(
+//                    userAccount,
+//                    user.getPassword(),
+//                    List.of(new SimpleGrantedAuthority("ROLE_USER"))
+//            );
             UsernamePasswordAuthenticationToken userToken = new UsernamePasswordAuthenticationToken(
-                    userAccount,
-                    user.getPassword(),
+                    user.getEmail(),
+                    "",
                     List.of(new SimpleGrantedAuthority("ROLE_USER"))
             );
+            SecurityContextHolder.getContext().setAuthentication(userToken);
+
 /*
             OAuth2User userDetails = new DefaultOAuth2User(List.of(new SimpleGrantedAuthority("ROLE_USER")), attributes, "iterview");
             OAuth2AuthenticationToken authentication = new OAuth2AuthenticationToken(userDetails, List.of(new SimpleGrantedAuthority("ROLE_USER")), "iterview");
 
             authentication.setDetails(userDetails);
-            SecurityContextHolder.getContext().setAuthentication(authentication);*/
+            SecurityContextHolder.getContext().setAuthentication(authentication); */
         }
         chain.doFilter(request, response);
     }
