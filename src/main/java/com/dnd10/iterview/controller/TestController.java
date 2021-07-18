@@ -14,7 +14,7 @@ public class TestController {
   @GetMapping("/login")
   public ResponseEntity<Object> test(HttpServletRequest request, HttpServletResponse response) {
 
-    return ResponseEntity.ok("");
+    return ResponseEntity.ok("loginPage");
   }
   @GetMapping("/")
   public ResponseEntity<Object> home(HttpServletRequest request,HttpServletResponse response) {

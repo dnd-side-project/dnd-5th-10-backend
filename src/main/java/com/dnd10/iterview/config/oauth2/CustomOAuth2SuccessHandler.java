@@ -21,6 +21,7 @@ import java.util.Date;
 @Component
 public class CustomOAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
+    public static final String REDIRECT_URL = "http://localhost:8080/";
     private final CookieUtils cookieUtils;
 
     @Override
@@ -45,7 +46,7 @@ public class CustomOAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHa
             .generateCookie(JwtProperties.HEADER_STRING, jwtToken, "/", false,
                 JwtProperties.EXPIRATION_TIME, null);
         response.addCookie(cookie);
-        getRedirectStrategy().sendRedirect(request, response, "http://localhost:8080/");
+        getRedirectStrategy().sendRedirect(request, response, REDIRECT_URL);
 
     }
 }
