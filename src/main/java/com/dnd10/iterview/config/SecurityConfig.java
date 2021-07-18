@@ -53,14 +53,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .successHandler(customOAuth2SuccessHandler);
 
         http.addFilterBefore(jwtAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
-
-        /*http
-                .oauth2Login()
-                .authorizationEndpoint()
-                .baseUri("/oauth2/authorize");
-                //.and()
-                //.userInfoEndpoint()
-                //.userService(customOAuth2UserService);*/
     }
 
     @Bean

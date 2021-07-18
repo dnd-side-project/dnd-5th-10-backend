@@ -64,7 +64,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         return new DefaultOAuth2User(List.of(new SimpleGrantedAuthority("ROLE_USER")),
                 oAuth2User.getAttributes(),
                 oAuth2UserRequest.getClientRegistration().getProviderDetails().getUserInfoEndpoint().getUserNameAttributeName());
-        // return UserPrincipal.create(user, oAuth2User.getAttributes());
     }
 
     private User registerNewUser(OAuth2UserRequest oAuth2UserRequest, OAuth2UserInfo oAuth2UserInfo) {
@@ -81,6 +80,5 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         existingUser.setUsername(oAuth2UserInfo.getName());
         return userRepository.save(existingUser);
     }
-
 
 }

@@ -50,21 +50,9 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
         String email = build.verify(token).getClaim("email").asString();
 
-        // no usage
-        /*Map<String, Object> attributes = new HashMap<>();
-        for (Map.Entry<String, Claim> entry : decode.getClaims().entrySet()) {
-            attributes.put(entry.getKey(), (Object) entry.getValue());
-        }*/
-
         if (email != null) {
             final Optional<User> oUser = userRepository.findUserByEmail(email);
             final User user = oUser.orElse(User.builder().build());
-//            UserPrincipal userAccount = new UserPrincipal(user);
-//            UsernamePasswordAuthenticationToken userToken = new UsernamePasswordAuthenticationToken(
-//                    userAccount,
-//                    user.getPassword(),
-//                    List.of(new SimpleGrantedAuthority("ROLE_USER"))
-//            );
             UsernamePasswordAuthenticationToken userToken = new UsernamePasswordAuthenticationToken(
                     user.getEmail(),
                     "",
