@@ -43,7 +43,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 //.addFilter(new JwtAuthenticationFilter(authenticationManager()))
                 .authorizeRequests()
-                .antMatchers("/", "/login", "/error", "/webjars/**").permitAll()
+                .antMatchers("/", "/login", "/error", "/webjars/**",
+                    "/v2/api-docs", "/configuration/**", "/swagger*/**").permitAll() // swagger 허용
                 .anyRequest().authenticated()
                 .and()
                 .oauth2Login()

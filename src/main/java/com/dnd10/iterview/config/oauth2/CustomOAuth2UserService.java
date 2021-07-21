@@ -67,18 +67,20 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     }
 
     private User registerNewUser(OAuth2UserRequest oAuth2UserRequest, OAuth2UserInfo oAuth2UserInfo) {
-        User user = new User();
+        User user = User.builder()
+            .email(oAuth2UserInfo.getEmail())
+            .username(oAuth2UserInfo.getName())
+            .provider(AuthProvider.valueOf(oAuth2UserRequest.getClientRegistration().getRegistrationId()))
+            .providerId(oAuth2UserInfo.getId())
+            .build();
 
-        user.setProvider(AuthProvider.valueOf(oAuth2UserRequest.getClientRegistration().getRegistrationId()));
-        user.setProviderId(oAuth2UserInfo.getId());
-        user.setUsername(oAuth2UserInfo.getName());
-        user.setEmail(oAuth2UserInfo.getEmail());
         return userRepository.save(user);
     }
 
     private User updateExistingUser(User existingUser, OAuth2UserInfo oAuth2UserInfo) {
-        existingUser.setUsername(oAuth2UserInfo.getName());
-        return userRepository.save(existingUser);
+        existingUser.changeUsername(oAuth2UserInfo.getName());
+        // return userRepository.save(existingUser); ?? update인데 save가 왜있지?
+        return existingUser;
     }
 
 }
