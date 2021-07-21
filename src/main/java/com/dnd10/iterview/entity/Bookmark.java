@@ -31,4 +31,8 @@ public class Bookmark {
   @ManyToOne(fetch = FetchType.LAZY)
   private User userManager;
 
+  public void changeName(String name){
+    this.name = name;
+  }
+
 }

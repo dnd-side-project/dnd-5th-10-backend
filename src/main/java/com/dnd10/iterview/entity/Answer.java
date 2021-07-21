@@ -47,4 +47,18 @@ public class Answer {
   @ManyToOne(fetch = FetchType.LAZY)
   private User userManager;
 
+  // answer는 일단 수정 불가능?
+
+  public void updateDate(LocalDate new_date){
+    this.update_date = new_date;
+  }
+
+  public void likeUp(){
+    this.liked++;
+  }
+
+  public void likeDown(){
+    this.liked--;
+  }
+
 }

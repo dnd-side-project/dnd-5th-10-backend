@@ -41,4 +41,12 @@ public class Question {
 
   @ManyToOne(fetch = FetchType.LAZY)
   private User userManager;
+
+  public void likeUp(){
+    this.bookmark_count++;
+  }
+
+  public void likeDown(){
+    this.bookmark_count--;
+  }
 }
