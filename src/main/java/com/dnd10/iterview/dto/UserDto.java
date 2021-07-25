@@ -3,6 +3,9 @@ package com.dnd10.iterview.dto;
 import com.dnd10.iterview.entity.AuthProvider;
 import com.dnd10.iterview.entity.User;
 import io.swagger.annotations.ApiModelProperty;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,7 +15,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UserDto {
 
+    @Email
     private String email;
+    @NotNull
+    @Size(max = 20)
     private String username;
     @ApiModelProperty(value = "oauth2 제공자", allowableValues = "google,github")
     private AuthProvider provider;

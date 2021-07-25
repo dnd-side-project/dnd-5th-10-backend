@@ -4,6 +4,7 @@ package com.dnd10.iterview.controller;
 import com.dnd10.iterview.dto.UserDto;
 import com.dnd10.iterview.service.UserService;
 import io.swagger.annotations.ApiOperation;
+import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -39,7 +40,7 @@ public class UserController {
 
   @ApiOperation(value = "회원 유저네임 변경", notes = "<big>회원의 이름</big>을 업데이트한다.")
   @PutMapping("/{userId}")
-  public ResponseEntity<Long> updateUserName(@PathVariable Long userId, @RequestBody UserDto userDto) {
+  public ResponseEntity<Long> updateUserName(@PathVariable Long userId, @RequestBody @Valid UserDto userDto) {
     final Long id = userService.update(userId, userDto);
     return ResponseEntity.ok(id);
   }
