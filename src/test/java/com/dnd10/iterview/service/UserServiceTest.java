@@ -32,7 +32,6 @@ class UserServiceTest {
     String username = "choi";
     final String email = "test@gmail.com";
     User user = UserDto.builder().username(username)
-        .password("")
         .provider(AuthProvider.google)
         .email(email)
         .providerId("11")
@@ -59,7 +58,6 @@ class UserServiceTest {
     String usernameExpected = "Kim";
     final String email = "test@gmail.com";
     User user = UserDto.builder().username(username)
-        .password("")
         .provider(AuthProvider.google)
         .email(email)
         .providerId("googleId")
@@ -68,7 +66,7 @@ class UserServiceTest {
     userRepository.save(user);
     //when
     final UserDto userDtoUpdated = UserDto.builder().email(email).username(usernameExpected)
-        .password("").email(email).providerId("11").build();
+        .email(email).providerId("11").build();
     final User sameUser = userRepository.findUserByEmail(email)
         .orElseThrow(IllegalArgumentException::new);
     userService.update(sameUser.getId(), userDtoUpdated);

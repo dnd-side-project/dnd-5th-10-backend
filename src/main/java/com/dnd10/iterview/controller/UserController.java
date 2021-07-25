@@ -3,6 +3,7 @@ package com.dnd10.iterview.controller;
 
 import com.dnd10.iterview.dto.UserDto;
 import com.dnd10.iterview.service.UserService;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,12 +31,13 @@ public class UserController {
     this.userService = userService;
   }
 
-
+  @ApiOperation(value = "회원 프로필 조회", notes = "<big>회원프로필</big>을 반환한다.")
   @GetMapping("profile/{userId}")
   public UserDto getUserProfile(@PathVariable Long userId) {
     return userService.getUserDetail(userId);
   }
 
+  @ApiOperation(value = "회원 유저네임 변경", notes = "<big>회원의 이름</big>을 업데이트한다.")
   @PutMapping("/{userId}")
   public ResponseEntity<Long> updateUserName(@PathVariable Long userId, @RequestBody UserDto userDto) {
     final Long id = userService.update(userId, userDto);

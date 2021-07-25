@@ -1,6 +1,5 @@
 package com.dnd10.iterview.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -32,10 +31,6 @@ public class User {
 
     @Column(unique = true, nullable = false)
     private String username; // nickname
-
-    @JsonIgnore
-    @Column(unique = true, nullable = true)
-    private String password; // todo: 필요성 따져보고 제거 or 유지
 
     @NotNull
     @Enumerated(EnumType.STRING)
