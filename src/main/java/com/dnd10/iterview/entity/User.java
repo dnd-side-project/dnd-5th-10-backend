@@ -1,10 +1,19 @@
 package com.dnd10.iterview.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.*;
-
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
@@ -15,7 +24,7 @@ import javax.validation.constraints.NotNull;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id")
+    @Column
     private Long id;
 
     @Column(unique = true, nullable = false)
@@ -34,7 +43,7 @@ public class User {
 
     private String providerId;
 
-    public void changeUsername(String username){
+    public void update(String username){
         this.username = username;
     }
 }

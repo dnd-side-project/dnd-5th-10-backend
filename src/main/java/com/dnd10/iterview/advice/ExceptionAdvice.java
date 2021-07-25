@@ -36,6 +36,13 @@ public class ExceptionAdvice {
     log.error("{} :: index 범위를 벗어나는 참조가 발생했습니다.",e.getMessage());
     return getErrorMessage(e.getMessage(), "유효하지 않은 값이 전달되었습니다.");
   }
+  @ExceptionHandler(IllegalArgumentException.class)
+  @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
+  public ErrorMessage arrayIndexOutOfBoundsException(HttpServletRequest request, IllegalArgumentException e) {
+    log.error("{}",request.getRequestURL());
+    log.error("{} :: 잘못된 인자가 전달되었습니다.",e.getMessage());
+    return getErrorMessage(e.getMessage(), "유효하지 않은 값이 전달되었습니다.");
+  }
 
   private ErrorMessage getErrorMessage(String message, String description) {
     return ErrorMessage.builder()

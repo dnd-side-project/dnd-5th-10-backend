@@ -3,6 +3,8 @@ package com.dnd10.iterview.config.oauth2;
 import com.dnd10.iterview.entity.AuthProvider;
 import com.dnd10.iterview.entity.User;
 import com.dnd10.iterview.repository.UserRepository;
+import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.AuthenticationException;
@@ -15,9 +17,6 @@ import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-
-import java.util.List;
-import java.util.Optional;
 
 @Component
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
@@ -78,7 +77,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     }
 
     private User updateExistingUser(User existingUser, OAuth2UserInfo oAuth2UserInfo) {
-        existingUser.changeUsername(oAuth2UserInfo.getName());
+        existingUser.update(oAuth2UserInfo.getName());
         // return userRepository.save(existingUser); ?? update인데 save가 왜있지?
         return existingUser;
     }
