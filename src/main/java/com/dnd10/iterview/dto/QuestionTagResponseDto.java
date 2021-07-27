@@ -1,6 +1,6 @@
 package com.dnd10.iterview.dto;
 
-import javax.validation.constraints.NotBlank;
+import com.dnd10.iterview.entity.QuestionTag;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,11 +10,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class QuestionRequestDto {
-
-  @NotBlank
-  private String content;
-
-  private Long bookmark_count;
-  private String tags;
+public class QuestionTagResponseDto {
+  // todo: question과 user tag dto를 나눌 필요성이 있는지 생각해보기
+  private String tagTitle;
 }

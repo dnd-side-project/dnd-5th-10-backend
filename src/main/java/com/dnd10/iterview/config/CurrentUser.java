@@ -8,6 +8,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
 @Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.RUNTIME)
-@AuthenticationPrincipal(expression = "#this == 'anonymousUser' ? null : user")
+@AuthenticationPrincipal//(expression = "#this == 'anonymousUser' ? null : user")
 public @interface CurrentUser {
 }
