@@ -17,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
-@RequiredArgsConstructor
 public class QuestionService {
 
   QuestionRepository questionRepository;
@@ -27,7 +26,6 @@ public class QuestionService {
   }
 
   public QuestionResponseDto getQuestion(Long questionId){
-    // todo: db에서 못찾는 에러 발생중
     Question question = questionRepository.findById(questionId)
         .orElseThrow(() -> new IllegalArgumentException("해당 문제가 존재하지 않습니다."));
 
