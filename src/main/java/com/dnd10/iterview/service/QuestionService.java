@@ -60,6 +60,7 @@ public class QuestionService {
         .bookmark_count(requestDto.getBookmark_count())
         .create_date(LocalDate.now())
         .userManager(user)
+        // question entity에 리스트 객체 넣어서 안해도 될줄 알았는데 NPE 오류.. builder 관련 찾아보기
         .questionTagList(new ArrayList<>())
         .build();
 
