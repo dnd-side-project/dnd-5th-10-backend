@@ -54,4 +54,8 @@ public class Question {
   public void likeDown(){
     this.bookmark_count--;
   }
+
+  public void addTag(QuestionTag tag){
+    questionTagList.add(tag);
+  }
 }

@@ -15,6 +15,6 @@ public class QuestionRequestDto {
   @NotBlank
   private String content;
 
-  private Long bookmark_count;
+  private Long bookmark_count; // 필요성?
   private String tags;
 }
