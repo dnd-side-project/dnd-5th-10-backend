@@ -5,6 +5,7 @@ import java.util.Date;
 import javax.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -41,6 +42,13 @@ public class ExceptionAdvice {
   public ErrorMessage arrayIndexOutOfBoundsException(HttpServletRequest request, IllegalArgumentException e) {
     log.error("{}",request.getRequestURL());
     log.error("{} :: 잘못된 인자가 전달되었습니다.",e.getMessage());
+    return getErrorMessage(e.getMessage(), "유효하지 않은 값이 전달되었습니다.");
+  }
+  @ExceptionHandler(OAuth2AuthenticationException.class)
+  @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
+  public ErrorMessage OAuth2AuthenticationException(HttpServletRequest request, OAuth2AuthenticationException e) {
+    log.error("{}",request.getRequestURL());
+    log.error("{} :: oauth2 login에서 문제가 발생했습니다.",e.getMessage());
     return getErrorMessage(e.getMessage(), "유효하지 않은 값이 전달되었습니다.");
   }
 
