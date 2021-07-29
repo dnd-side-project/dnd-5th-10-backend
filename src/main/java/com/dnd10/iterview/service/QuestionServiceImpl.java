@@ -49,6 +49,17 @@ public class QuestionServiceImpl implements QuestionService {
     return generateQuestionResponseDto(saved);
   }
 
+  @Override
+  public List<QuestionResponseDto> getSearchQuestions(){
+    // todo: queryDsl 적용하기
+    return null;
+  }
+
+  @Override
+  public List<QuestionResponseDto> getQuiz(){
+    return null;
+  }
+
   private Question generateQuestion(User user, QuestionRequestDto requestDto){
     Question question = Question.builder()
         .content(requestDto.getContent())

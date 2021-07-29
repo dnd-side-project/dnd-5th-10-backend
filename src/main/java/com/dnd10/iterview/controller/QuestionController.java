@@ -5,6 +5,7 @@ import com.dnd10.iterview.dto.QuestionResponseDto;
 import com.dnd10.iterview.service.QuestionService;
 import io.swagger.annotations.ApiOperation;
 import java.security.Principal;
+import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,8 +21,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class QuestionController {
   /**
-  * 한 문제 조회하기
-  * 새로운 문제 생성
+  * 한 문제 조회하기 v
+  * 새로운 문제 생성 v
   * 문제 리스트 조회하기(최신순, 인기순)
   * 퀴즈 생성(특정 태그 문제 중 일정 숫자만큼 랜덤하게 response)
   */
@@ -42,6 +43,22 @@ public class QuestionController {
     QuestionResponseDto dto = questionService.addQuestion(principal, requestDto);
 
     return ResponseEntity.ok(dto);
+  }
+
+  @ApiOperation(value = "문제 리스트 조회", notes = "<big>키워드에 따라 문제 리스트</big>를 반환한다.")
+  @GetMapping("")
+  public ResponseEntity getSearchQuestions(){
+    List<QuestionResponseDto> questionList = questionService.getSearchQuestions();
+
+    return ResponseEntity.ok(questionList);
+  }
+
+  @ApiOperation(value = "퀴즈 만들기", notes = "<big>키워드, 개수에 따라 퀴즈</big>를 생성하고 반환한다.")
+  @GetMapping("/quiz")
+  public ResponseEntity getQuiz(){
+    List<QuestionResponseDto> questionList = questionService.getQuiz();
+
+    return ResponseEntity.ok(questionList);
   }
 
 }
