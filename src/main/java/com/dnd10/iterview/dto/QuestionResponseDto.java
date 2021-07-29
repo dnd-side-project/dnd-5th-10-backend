@@ -1,9 +1,5 @@
 package com.dnd10.iterview.dto;
 
-import com.dnd10.iterview.entity.AuthProvider;
-import com.dnd10.iterview.entity.Question;
-import com.dnd10.iterview.entity.QuestionTag;
-import com.dnd10.iterview.entity.User;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,13 +15,16 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class QuestionResponseDto {
 
+  private Long id;
+
   @NotBlank
   private String content;
 
   private Long bookmark_count;
   private LocalDate create_date;
 
-  private UserDto user;
+  private String username; // 보안상 유저 이메일, 닉네임만
+  private String email;
 
   private List<QuestionTagResponseDto> tagList = new ArrayList<>();
 }
