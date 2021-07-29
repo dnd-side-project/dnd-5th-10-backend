@@ -3,18 +3,15 @@ package com.dnd10.iterview.service;
 import com.dnd10.iterview.dto.UserDto;
 import com.dnd10.iterview.entity.User;
 import com.dnd10.iterview.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@RequiredArgsConstructor
 @Service
 public class UserServiceImpl implements UserService {
 
-  UserRepository userRepository;
-
-  public UserServiceImpl(UserRepository userRepository) {
-    this.userRepository = userRepository;
-  }
-
+  private final UserRepository userRepository;
 
   @Override
   public UserDto getUserDetail(Long id) {
