@@ -6,6 +6,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,7 +27,8 @@ public class QuestionTag {
   private Long id;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  private Question questionManager;
+  @JoinColumn(name = "question_id")
+  private Question question;
 
   @ManyToOne(fetch = FetchType.LAZY)
   private Tag tagManager;
