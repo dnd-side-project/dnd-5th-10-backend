@@ -23,7 +23,7 @@ public class AnswerServiceImpl implements AnswerService {
   private final UserRepository userRepository;
 
   @Override
-  public List<AnswerDto> getAnswers(Long id) {
+  public List<AnswerDto> getAllAnswers(Long id) {
     final List<Answer> answers = answerRepository.findAllByQuestionManager_Id(id).orElseThrow(IllegalArgumentException::new);
     return answers.stream().map(AnswerDto::new)
         .collect(Collectors.toList());

@@ -5,7 +5,7 @@ import java.util.List;
 
 public interface AnswerService {
 
-  List<AnswerDto> getAnswers(Long id);
+  List<AnswerDto> getAllAnswers(Long id);
   AnswerDto createAnswer(AnswerDto answerDto);
 
 }
