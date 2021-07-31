@@ -11,4 +11,5 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public interface AnswerRepository extends JpaRepository<Answer,Long> {
   Optional<List<Answer>> findAllByQuestionManager_Id(Long id);
+  Optional<List<Answer>> findAllByQuestionManager_IdOrderByLikedDesc(Long id);
 }

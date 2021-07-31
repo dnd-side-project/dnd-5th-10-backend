@@ -7,6 +7,7 @@ import com.dnd10.iterview.entity.User;
 import com.dnd10.iterview.repository.AnswerRepository;
 import com.dnd10.iterview.repository.QuestionRepository;
 import com.dnd10.iterview.repository.UserRepository;
+import com.dnd10.iterview.util.Order;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -23,8 +24,13 @@ public class AnswerServiceImpl implements AnswerService {
   private final UserRepository userRepository;
 
   @Override
-  public List<AnswerDto> getAllAnswers(Long id) {
-    final List<Answer> answers = answerRepository.findAllByQuestionManager_Id(id).orElseThrow(IllegalArgumentException::new);
+  public List<AnswerDto> getAllAnswers(Long id, String order) {
+    List<Answer> answers;
+    if (order.equals(Order.DESC.getOrder())) {
+      answers = answerRepository.findAllByQuestionManager_IdOrderByLikedDesc(id).orElseThrow(IllegalArgumentException::new);
+    } else {
+      answers = answerRepository.findAllByQuestionManager_Id(id).orElseThrow(IllegalArgumentException::new);
+    }
     return answers.stream().map(AnswerDto::new)
         .collect(Collectors.toList());
   }
@@ -38,4 +44,5 @@ public class AnswerServiceImpl implements AnswerService {
     answerRepository.save(answerDto.toEntity(user,question));
     return answerDto;
   }
+
 }

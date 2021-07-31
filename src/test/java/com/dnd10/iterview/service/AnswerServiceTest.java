@@ -69,12 +69,9 @@ class AnswerServiceTest {
         .build();
     final AnswerDto answerSaved = answerService.createAnswer(answerDto);
 
-    final List<AnswerDto> allAnswers = answerService.getAllAnswers(1L);
+    final List<AnswerDto> allAnswers = answerService.getAllAnswers(1L,"default");
     Assertions.assertThat(allAnswers.get(0).getContent()).isEqualTo(answerSaved.getContent());
 
   }
 
-  @Test
-  void createAnswer() {
-  }
 }
