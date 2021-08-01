@@ -125,6 +125,7 @@
 							<goal>process</goal>
 						</goals>
 						<configuration>
+							<!-- maven compile을 통해 querydsl을 위한 Q entity 생성 필수 -->
 							<outputDirectory>target/generated-sources/java</outputDirectory>
 							<processor>com.querydsl.apt.jpa.JPAAnnotationProcessor</processor>
 						</configuration>

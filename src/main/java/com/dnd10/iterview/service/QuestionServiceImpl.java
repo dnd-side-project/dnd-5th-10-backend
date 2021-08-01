@@ -14,6 +14,7 @@ import com.dnd10.iterview.repository.UserRepository;
 import java.security.Principal;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -50,9 +51,12 @@ public class QuestionServiceImpl implements QuestionService {
   }
 
   @Override
-  public List<QuestionResponseDto> getSearchQuestions(){
+  public List<QuestionResponseDto> getSearchQuestions(String tagList){
     // todo: queryDsl 적용하기
-    return null;
+    List<String> tags = Arrays.asList(tagList.split("/"));
+    List<Question> questionList = questionRepository.findWithTags(tags);
+
+    return generateQuestionResponseDtos(questionList);
   }
 
   @Override
@@ -115,5 +119,15 @@ public class QuestionServiceImpl implements QuestionService {
         .username(question.getUserManager().getUsername())
         .tagList(dtoList)
         .build();
+  }
+
+  private List<QuestionResponseDto> generateQuestionResponseDtos(List<Question> questionList){
+    List<QuestionResponseDto> dtos = new ArrayList<>();
+
+    for(Question q : questionList){
+      dtos.add(generateQuestionResponseDto(q));
+    }
+
+    return dtos;
   }
 }

@@ -9,6 +9,6 @@ public interface QuestionService {
 
   QuestionResponseDto getQuestion(Long questionId);
   QuestionResponseDto addQuestion(Principal principal, QuestionRequestDto requestDto);
-  List<QuestionResponseDto> getSearchQuestions();
+  List<QuestionResponseDto> getSearchQuestions(String tagList);
   List<QuestionResponseDto> getQuiz();
 }

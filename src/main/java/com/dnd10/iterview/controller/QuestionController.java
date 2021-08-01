@@ -46,9 +46,9 @@ public class QuestionController {
   }
 
   @ApiOperation(value = "문제 리스트 조회", notes = "<big>키워드에 따라 문제 리스트</big>를 반환한다.")
-  @GetMapping("")
-  public ResponseEntity getSearchQuestions(){
-    List<QuestionResponseDto> questionList = questionService.getSearchQuestions();
+  @GetMapping("/search")
+  public ResponseEntity getSearchQuestions(@PathVariable String tagList){
+    List<QuestionResponseDto> questionList = questionService.getSearchQuestions(tagList);
 
     return ResponseEntity.ok(questionList);
   }
