@@ -37,7 +37,6 @@ public class AnswerController {
           @ApiImplicitParam(
               name = "sort"
               , value = "정렬 방식 (desc : 좋아요 내림차순)"
-              , required = false
               , dataType = "string"
               , paramType = "query"
               , defaultValue = "default"
@@ -48,6 +47,12 @@ public class AnswerController {
   public List<AnswerDto> getAllAnswers(@PathVariable Long questionId,
       @RequestParam("sort") String order) {
     order = StringUtils.defaultString(order, "default");
-    return answerService.getAllAnswers(questionId, order);
+    return answerService.getAllAnswersByQuestion(questionId, order);
+  }
+  @GetMapping("/all/{userId}")
+  public List<AnswerDto> getAllAnswersLiked(@PathVariable Long userId,
+      @RequestParam("sort") String order) {
+    order = StringUtils.defaultString(order, "default");
+    return answerService.getAllAnswersByQuestion(userId, order);
   }
 }

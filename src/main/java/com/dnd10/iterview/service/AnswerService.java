@@ -5,8 +5,11 @@ import java.util.List;
 
 public interface AnswerService {
 
-  List<AnswerDto> getAllAnswers(Long id, String order);
+  List<AnswerDto> getAllAnswersByQuestion(Long id, String order);
 
   AnswerDto createAnswer(AnswerDto answerDto);
 
+  List<AnswerDto> getAllAnswerLiked(Long userId);
+
+  AnswerDto getAnswer(Long id);
 }
