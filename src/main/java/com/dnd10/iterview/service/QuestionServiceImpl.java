@@ -109,7 +109,7 @@ public class QuestionServiceImpl implements QuestionService {
     return QuestionResponseDto.builder()
         .id(question.getId())
         .content(question.getContent())
-        .create_date(question.getCreate_date())
+        //.create_date(question.getCreate_date())
         .bookmark_count(question.getBookmark_count())
         .email(question.getUserManager().getEmail())
         .username(question.getUserManager().getUsername())
