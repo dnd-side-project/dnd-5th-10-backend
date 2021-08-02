@@ -18,6 +18,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -51,10 +52,22 @@ public class QuestionServiceImpl implements QuestionService {
   }
 
   @Override
-  public List<QuestionResponseDto> getSearchQuestions(String tagList){
+  public List<QuestionResponseDto> getSearchQuestions(String tagList, String sort){
     // todo: queryDsl 적용하기
-    List<String> tags = Arrays.asList(tagList.split("/"));
-    List<Question> questionList = questionRepository.findWithTags(tags);
+    List<Question> questionList;
+
+    if(sort.isEmpty()){
+      sort = "bookmarkCount";
+    } // todo: basetimeEntity 생기면 createDate로 기본값 변경하기
+
+    if(tagList.isEmpty()){ // tag가 없으면 그냥 전부 다. page는 나중 적용
+      System.out.println("noo");
+      questionList = questionRepository.findAll(Sort.by(Sort.Direction.DESC, sort));
+    }
+    else {
+      List<String> tags = Arrays.asList(tagList.split("/"));
+      questionList = questionRepository.findWithTags(tags, sort);
+    }
 
     return generateQuestionResponseDtos(questionList);
   }
@@ -67,7 +80,7 @@ public class QuestionServiceImpl implements QuestionService {
   private Question generateQuestion(User user, QuestionRequestDto requestDto){
     Question question = Question.builder()
         .content(requestDto.getContent())
-        .bookmark_count(requestDto.getBookmark_count())
+        .bookmarkCount(requestDto.getBookmarkCount())
         .create_date(LocalDate.now())
         .userManager(user)
         // question entity에 리스트 객체 넣어서 안해도 될줄 알았는데 NPE 오류.. builder 관련 찾아보기
@@ -114,7 +127,7 @@ public class QuestionServiceImpl implements QuestionService {
         .id(question.getId())
         .content(question.getContent())
         //.create_date(question.getCreate_date())
-        .bookmark_count(question.getBookmark_count())
+        .bookmarkCount(question.getBookmarkCount())
         .email(question.getUserManager().getEmail())
         .username(question.getUserManager().getUsername())
         .tagList(dtoList)

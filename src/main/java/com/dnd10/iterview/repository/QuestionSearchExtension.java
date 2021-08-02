@@ -9,6 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public interface QuestionSearchExtension {
 
-  List<Question> findWithTags(List<String> tagList);
+  List<Question> findWithTags(List<String> tagList, String sort);
   //List<Question> findWithTagsRandom(List<String> tagList);
 }

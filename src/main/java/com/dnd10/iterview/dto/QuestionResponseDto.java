@@ -20,7 +20,7 @@ public class QuestionResponseDto {
   @Length(min = 20, max = 1000, message = "content length should be 20 ~ 1000")
   private String content;
 
-  private Long bookmark_count;
+  private Long bookmarkCount;
 
   private String username; // 보안상 유저 이메일, 닉네임만
   private String email;

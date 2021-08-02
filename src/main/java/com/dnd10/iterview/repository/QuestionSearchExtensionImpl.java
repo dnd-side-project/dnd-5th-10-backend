@@ -21,7 +21,7 @@ public class QuestionSearchExtensionImpl extends QuerydslRepositorySupport imple
   }
 
   @Override
-  public List<Question> findWithTags(List<String> tagList) {
+  public List<Question> findWithTags(List<String> tagList, String sort) {
     BooleanBuilder builder = new BooleanBuilder();
     QQuestion question = QQuestion.question;
 
@@ -31,10 +31,21 @@ public class QuestionSearchExtensionImpl extends QuerydslRepositorySupport imple
       builder.and(question.questionTagList.any().tagManager.name.eq(t));
     }
 
-    return queryFactory
-        .selectFrom(question)
-        .where(builder)
-        .fetch();
+    if(sort.equals("bookmark_count")){
+      return queryFactory
+          .selectFrom(question)
+          .where(builder)
+          .orderBy(question.bookmark_count.desc())
+          .fetch();
+    }
+    else{
+      return queryFactory
+          .selectFrom(question)
+          .where(builder)
+          .orderBy(question.create_date.desc()) // 우선 최신순을 default로
+          .fetch();
+    }
+
   }
 
   /*@Override
