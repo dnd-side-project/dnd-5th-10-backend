@@ -4,6 +4,7 @@ package com.dnd10.iterview.controller;
 import com.dnd10.iterview.dto.UserDto;
 import com.dnd10.iterview.service.UserService;
 import io.swagger.annotations.ApiOperation;
+import java.security.Principal;
 import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,9 +34,9 @@ public class UserController {
   }
 
   @ApiOperation(value = "회원 프로필 조회", notes = "<big>회원프로필</big>을 반환한다.")
-  @GetMapping("profile/{userId}")
-  public UserDto getUserProfile(@PathVariable Long userId) {
-    return userService.getUserDetail(userId);
+  @GetMapping("profile")
+  public UserDto getUserProfile(Principal principal) {
+    return userService.getUserDetail(principal);
   }
 
   @ApiOperation(value = "회원 유저네임 변경", notes = "<big>회원의 이름</big>을 업데이트한다.")
