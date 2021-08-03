@@ -20,7 +20,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/answer")
 public class AnswerController {
 
-  AnswerService answerService;
+  /**
+   * 문제당 가장 인기있는 답변
+   */
+  private final AnswerService answerService;
 
   public AnswerController(AnswerService answerService) {
     this.answerService = answerService;
@@ -43,16 +46,12 @@ public class AnswerController {
           )
       }
   )
-  @GetMapping("/all/{questionId}")
-  public List<AnswerDto> getAllAnswers(@PathVariable Long questionId,
+  @GetMapping("/{questionId}")
+  public List<AnswerDto> getAllAnswersByQuestion(@PathVariable Long questionId,
       @RequestParam("sort") String order) {
+    // page
     order = StringUtils.defaultString(order, "default");
     return answerService.getAllAnswersByQuestion(questionId, order);
   }
-  @GetMapping("/all/{userId}")
-  public List<AnswerDto> getAllAnswersLiked(@PathVariable Long userId,
-      @RequestParam("sort") String order) {
-    order = StringUtils.defaultString(order, "default");
-    return answerService.getAllAnswersByQuestion(userId, order);
-  }
+
 }

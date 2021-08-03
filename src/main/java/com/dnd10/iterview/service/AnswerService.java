@@ -9,7 +9,5 @@ public interface AnswerService {
 
   AnswerDto createAnswer(AnswerDto answerDto);
 
-  List<AnswerDto> getAllAnswerLiked(Long userId);
-
   AnswerDto getAnswer(Long id);
 }

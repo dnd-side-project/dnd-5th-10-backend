@@ -1,7 +1,7 @@
 package com.dnd10.iterview.dto;
 
 import com.dnd10.iterview.entity.LikeAnswer;
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -9,9 +9,9 @@ import lombok.Getter;
 @Getter
 public class LikeAnswerDto {
 
-  @NotBlank
+  @NotNull
   private final Long userId;
-  @NotBlank
+  @NotNull
   private final Long answerId;
 
   public LikeAnswerDto(Long userId, Long answerId) {
