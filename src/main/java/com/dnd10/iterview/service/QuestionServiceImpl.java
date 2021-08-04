@@ -17,7 +17,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,6 +55,16 @@ public class QuestionServiceImpl implements QuestionService {
   }
 
   @Override
+  public List<QuestionResponseDto> getAllQuestions(Pageable pageable){
+    Page<Question> questionPage = questionRepository.findAll(pageable);
+
+    List<QuestionResponseDto> questionList = questionPage.stream().map(
+        q -> generateQuestionResponseDto(q)).collect(Collectors.toList());
+
+    return questionList;
+  }
+
+  @Override
   public List<QuestionResponseDto> getSearchQuestions(String tagList, String sort){
     // todo: queryDsl 적용하기
     List<Question> questionList;
@@ -61,7 +74,6 @@ public class QuestionServiceImpl implements QuestionService {
     } // todo: basetimeEntity 생기면 createDate로 기본값 변경하기
 
     if(tagList.isEmpty()){ // tag가 없으면 그냥 전부 다. page는 나중 적용
-      System.out.println("noo");
       questionList = questionRepository.findAll(Sort.by(Sort.Direction.DESC, sort));
     }
     else {
