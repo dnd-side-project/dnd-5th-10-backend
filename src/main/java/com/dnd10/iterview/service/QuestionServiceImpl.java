@@ -62,14 +62,13 @@ public class QuestionServiceImpl implements QuestionService {
   }
 
   @Override
-  public List<QuestionResponseDto> getSearchQuestions(String tagList, Pageable pageable){
+  public List<QuestionResponseDto> getSearchQuestions(List<String> tagList, Pageable pageable){
 
     if(tagList.isEmpty()){ // tag가 없으면 그냥 전부 다.
       return getAllQuestions(pageable);
     }
     else {
-      List<String> tags = Arrays.asList(tagList.split("/"));
-      Page<Question> questionPage = questionRepository.findWithTags(tags, pageable);
+      Page<Question> questionPage = questionRepository.findWithTags(tagList, pageable);
 
       return mappingPageToDto(questionPage);
     }
@@ -107,6 +106,8 @@ public class QuestionServiceImpl implements QuestionService {
   }
 
   private void generateTags(Question question, String tags){
+
+    if(tags.isEmpty()) return; // 태그 없으면 그냥 없는채로 생성
 
     // todo: 어떤 구분자로 나눠서 줄지는 프론트와 이야기
     String[] tagSplit = tags.split("/");
