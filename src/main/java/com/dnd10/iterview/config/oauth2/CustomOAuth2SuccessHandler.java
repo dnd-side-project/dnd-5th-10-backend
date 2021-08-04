@@ -24,7 +24,7 @@ public class CustomOAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHa
     public static final String REDIRECT_URL = "http://localhost:3000/login";
     public static final String PATH = "/";
     private final CookieUtils cookieUtils;
-
+    private final JwtProperties jwtProperties;
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException, ServletException {
@@ -37,15 +37,15 @@ public class CustomOAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHa
 
         String jwtToken = JWT.create()
                 .withSubject(principal.getAttribute("sub"))
-                .withExpiresAt(new Date(System.currentTimeMillis()+ JwtProperties.EXPIRATION_TIME))
+                .withExpiresAt(new Date(System.currentTimeMillis()+ jwtProperties.getExpirationTime()))
                 .withClaim("id", (Long) principal.getAttribute("id"))
                 .withClaim("email", (String) principal.getAttribute("email"))
-                .sign(Algorithm.HMAC256(JwtProperties.SECRET));
+                .sign(Algorithm.HMAC256(jwtProperties.getSecret()));
         response.addHeader(JwtProperties.HEADER_STRING, JwtProperties.TOKEN_PREFIX + jwtToken);
 
         final Cookie cookie = cookieUtils
             .generateCookie(JwtProperties.HEADER_STRING, jwtToken, PATH, false,
-                JwtProperties.EXPIRATION_TIME, null);
+                jwtProperties.getExpirationTime(), null);
         response.addCookie(cookie);
         getRedirectStrategy().sendRedirect(request, response, REDIRECT_URL);
 
