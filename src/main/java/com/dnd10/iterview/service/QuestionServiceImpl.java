@@ -14,9 +14,14 @@ import com.dnd10.iterview.repository.UserRepository;
 import java.security.Principal;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -49,10 +54,46 @@ public class QuestionServiceImpl implements QuestionService {
     return generateQuestionResponseDto(saved);
   }
 
+  @Override
+  public List<QuestionResponseDto> getAllQuestions(Pageable pageable){
+    Page<Question> questionPage = questionRepository.findAll(pageable);
+
+    return mappingPageToDto(questionPage);
+  }
+
+  @Override
+  public List<QuestionResponseDto> getSearchQuestions(String tagList, Pageable pageable){
+
+    if(tagList.isEmpty()){ // tag가 없으면 그냥 전부 다.
+      return getAllQuestions(pageable);
+    }
+    else {
+      List<String> tags = Arrays.asList(tagList.split("/"));
+      Page<Question> questionPage = questionRepository.findWithTags(tags, pageable);
+
+      return mappingPageToDto(questionPage);
+    }
+  }
+
+  @Override
+  public List<QuestionResponseDto> getMyAllQuestions(Principal principal, Pageable pageable){
+    User user = userRepository.findUserByEmail(principal.getName())
+        .orElseThrow(() -> new IllegalArgumentException("해당 유저가 존재하지 않습니다."));
+
+    Page<Question> questionPage = questionRepository.findAllByUserManager(user, pageable);
+
+    return mappingPageToDto(questionPage);
+  }
+
+  @Override
+  public List<QuestionResponseDto> getQuiz(){
+    return null;
+  }
+
   private Question generateQuestion(User user, QuestionRequestDto requestDto){
     Question question = Question.builder()
         .content(requestDto.getContent())
-        .bookmark_count(requestDto.getBookmark_count())
+        .bookmarkCount(requestDto.getBookmarkCount())
         .create_date(LocalDate.now())
         .userManager(user)
         // question entity에 리스트 객체 넣어서 안해도 될줄 알았는데 NPE 오류.. builder 관련 찾아보기
@@ -98,11 +139,28 @@ public class QuestionServiceImpl implements QuestionService {
     return QuestionResponseDto.builder()
         .id(question.getId())
         .content(question.getContent())
-        .create_date(question.getCreate_date())
-        .bookmark_count(question.getBookmark_count())
+        //.create_date(question.getCreate_date())
+        .bookmarkCount(question.getBookmarkCount())
         .email(question.getUserManager().getEmail())
         .username(question.getUserManager().getUsername())
         .tagList(dtoList)
         .build();
+  }
+
+  private List<QuestionResponseDto> generateQuestionResponseDtos(List<Question> questionList){
+    List<QuestionResponseDto> dtos = new ArrayList<>();
+
+    for(Question q : questionList){
+      dtos.add(generateQuestionResponseDto(q));
+    }
+
+    return dtos;
+  }
+
+  private List<QuestionResponseDto> mappingPageToDto(Page<Question> questionPage){
+    List<QuestionResponseDto> questionList = questionPage.stream().map(
+        q -> generateQuestionResponseDto(q)).collect(Collectors.toList());
+
+    return questionList;
   }
 }
