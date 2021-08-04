@@ -1,9 +1,11 @@
 package com.dnd10.iterview.config;
 
 //import com.dnd10.iterview.config.jwt.JwtAuthenticationFilter;
+
+import com.dnd10.iterview.config.jwt.JwtAuthorizationFilter;
+import com.dnd10.iterview.config.jwt.JwtProperties;
 import com.dnd10.iterview.config.oauth2.CustomOAuth2SuccessHandler;
 import com.dnd10.iterview.config.oauth2.CustomOAuth2UserService;
-import com.dnd10.iterview.config.jwt.JwtAuthorizationFilter;
 import com.dnd10.iterview.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
@@ -28,6 +30,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final CustomOAuth2UserService customOAuth2UserService;
     private final UserRepository userRepository;
     private final CorsConfig corsConfig;
+    private final JwtProperties jwtProperties;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -58,7 +61,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public JwtAuthorizationFilter jwtAuthorizationFilter() throws Exception {
-        return new JwtAuthorizationFilter(userRepository);
+        return new JwtAuthorizationFilter(jwtProperties, userRepository);
     }
 
     @Bean
