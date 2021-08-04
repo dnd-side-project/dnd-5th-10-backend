@@ -1,6 +1,7 @@
 package com.dnd10.iterview.repository;
 
 import com.dnd10.iterview.entity.Question;
+import com.dnd10.iterview.entity.User;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public interface QuestionRepository extends JpaRepository<Question, Long>, QuestionSearchExtension {
   Optional<Question> findById(Long id);
+  Page<Question> findAllByUserManager(User user, Pageable pageable);
 
  // List<Question> findAllByQuestionTagListWithinOrderByCreate_dateDesc(List<QuestionTag> tagList);
   //List<Question> findAllByQuestionTagListContainingOrderByBookmark_countDesc(List<QuestionTag> tagList);

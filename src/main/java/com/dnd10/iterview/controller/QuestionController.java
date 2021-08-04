@@ -54,7 +54,7 @@ public class QuestionController {
 
   @ApiOperation(value = "모든 문제 리스트", notes = "<big>구분 없이 모든 문제 리스트</big>를 반환한다.")
   @GetMapping("/all")
-  public ResponseEntity getAllQuestions(@PageableDefault(size = 5, sort = "createDate",
+  public ResponseEntity getAllQuestions(@PageableDefault(size = 5, sort = "bookmarkCount", // todo: 최신순 변경
       direction = Sort.Direction.DESC) Pageable pageable){
     List<QuestionResponseDto> questionList = questionService.getAllQuestions(pageable);
 
@@ -65,6 +65,15 @@ public class QuestionController {
   @GetMapping("/search")
   public ResponseEntity getSearchQuestions(@RequestParam("tags") String tagList, @RequestParam("sort") String sort){
     List<QuestionResponseDto> questionList = questionService.getSearchQuestions(tagList, sort);
+
+    return ResponseEntity.ok(questionList);
+  }
+
+  @ApiOperation(value = "내가 만든 문제 리스트 검색", notes = "<big>내가 만든 모든 문제</big>를 반환한다.")
+  @GetMapping("/mine")
+  public ResponseEntity getMyAllQuestions(Principal principal, @PageableDefault(size = 5, sort = "bookmarkCount", // todo: 최신순 변경
+      direction = Sort.Direction.DESC) Pageable pageable){
+    List<QuestionResponseDto> questionList = questionService.getMyAllQuestions(principal, pageable);
 
     return ResponseEntity.ok(questionList);
   }

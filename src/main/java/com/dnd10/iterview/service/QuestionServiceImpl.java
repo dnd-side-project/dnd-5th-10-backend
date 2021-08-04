@@ -85,6 +85,18 @@ public class QuestionServiceImpl implements QuestionService {
   }
 
   @Override
+  public List<QuestionResponseDto> getMyAllQuestions(Principal principal, Pageable pageable){
+    User user = userRepository.findUserByEmail(principal.getName())
+        .orElseThrow(() -> new IllegalArgumentException("해당 유저가 존재하지 않습니다."));
+
+    Page<Question> questionPage = questionRepository.findAllByUserManager(user, pageable);
+    List<QuestionResponseDto> questionList = questionPage.stream().map(
+        q -> generateQuestionResponseDto(q)).collect(Collectors.toList());
+
+    return questionList;
+  }
+
+  @Override
   public List<QuestionResponseDto> getQuiz(){
     return null;
   }
