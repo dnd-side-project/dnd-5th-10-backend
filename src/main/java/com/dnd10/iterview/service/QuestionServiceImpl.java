@@ -109,8 +109,7 @@ public class QuestionServiceImpl implements QuestionService {
 
     if(tags.isEmpty()) return; // 태그 없으면 그냥 없는채로 생성
 
-    // todo: 어떤 구분자로 나눠서 줄지는 프론트와 이야기
-    String[] tagSplit = tags.split("/");
+    String[] tagSplit = tags.split(",");
     for(String s : tagSplit){
       // 태그 미리 일부만 지정하기로 했으니 이외의 태그는 입력 못하도록
       Tag tag = tagRepository.findByName(s)
