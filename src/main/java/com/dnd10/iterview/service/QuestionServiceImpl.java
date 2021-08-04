@@ -62,14 +62,13 @@ public class QuestionServiceImpl implements QuestionService {
   }
 
   @Override
-  public List<QuestionResponseDto> getSearchQuestions(String tagList, Pageable pageable){
+  public List<QuestionResponseDto> getSearchQuestions(List<String> tagList, Pageable pageable){
 
     if(tagList.isEmpty()){ // tag가 없으면 그냥 전부 다.
       return getAllQuestions(pageable);
     }
     else {
-      List<String> tags = Arrays.asList(tagList.split("/"));
-      Page<Question> questionPage = questionRepository.findWithTags(tags, pageable);
+      Page<Question> questionPage = questionRepository.findWithTags(tagList, pageable);
 
       return mappingPageToDto(questionPage);
     }

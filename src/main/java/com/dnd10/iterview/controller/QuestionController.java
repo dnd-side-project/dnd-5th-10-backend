@@ -62,7 +62,7 @@ public class QuestionController {
 
   @ApiOperation(value = "문제 리스트 검색", notes = "<big>키워드에 따라 문제 리스트</big>를 반환한다.")
   @GetMapping("/search")
-  public ResponseEntity getSearchQuestions(@RequestParam("tags") String tagList, @PageableDefault(size = 5, sort = "bookmarkCount", // todo: 최신순 변경
+  public ResponseEntity getSearchQuestions(@RequestParam("tags") List<String> tagList, @PageableDefault(size = 5, sort = "bookmarkCount", // todo: 최신순 변경
       direction = Sort.Direction.DESC) Pageable pageable){
     List<QuestionResponseDto> questionList = questionService.getSearchQuestions(tagList, pageable);
 
