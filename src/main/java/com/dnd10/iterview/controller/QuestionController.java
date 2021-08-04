@@ -28,9 +28,8 @@ public class QuestionController {
   /**
   * 한 문제 조회하기 v
   * 새로운 문제 생성 v
-  * 문제 리스트 검색(최신순, 인기순) 일부완성. 단어검색도 허용?
-   * page 적용하기
-   * 내가 한 질문 가져오기
+  * 문제 리스트 검색(최신순, 인기순), page 적용. (필요 시 단어 검색도 적용) v
+  * 내가 한 질문 가져오기 v
   * 퀴즈 생성(특정 태그 문제 중 일정 숫자만큼 랜덤하게 response)
   */
 
@@ -63,8 +62,9 @@ public class QuestionController {
 
   @ApiOperation(value = "문제 리스트 검색", notes = "<big>키워드에 따라 문제 리스트</big>를 반환한다.")
   @GetMapping("/search")
-  public ResponseEntity getSearchQuestions(@RequestParam("tags") String tagList, @RequestParam("sort") String sort){
-    List<QuestionResponseDto> questionList = questionService.getSearchQuestions(tagList, sort);
+  public ResponseEntity getSearchQuestions(@RequestParam("tags") String tagList, @PageableDefault(size = 5, sort = "bookmarkCount", // todo: 최신순 변경
+      direction = Sort.Direction.DESC) Pageable pageable){
+    List<QuestionResponseDto> questionList = questionService.getSearchQuestions(tagList, pageable);
 
     return ResponseEntity.ok(questionList);
   }
