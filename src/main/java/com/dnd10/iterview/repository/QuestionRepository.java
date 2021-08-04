@@ -15,6 +15,4 @@ public interface QuestionRepository extends JpaRepository<Question, Long>, Quest
   Optional<Question> findById(Long id);
   Page<Question> findAllByUserManager(User user, Pageable pageable);
 
- // List<Question> findAllByQuestionTagListWithinOrderByCreate_dateDesc(List<QuestionTag> tagList);
-  //List<Question> findAllByQuestionTagListContainingOrderByBookmark_countDesc(List<QuestionTag> tagList);
 }

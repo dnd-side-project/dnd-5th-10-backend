@@ -63,9 +63,8 @@ public class QuestionServiceImpl implements QuestionService {
 
   @Override
   public List<QuestionResponseDto> getSearchQuestions(String tagList, Pageable pageable){
-    // todo: queryDsl 적용하기
 
-    if(tagList.isEmpty()){ // tag가 없으면 그냥 전부 다. page는 나중 적용
+    if(tagList.isEmpty()){ // tag가 없으면 그냥 전부 다.
       return getAllQuestions(pageable);
     }
     else {
