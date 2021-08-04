@@ -1,5 +1,6 @@
 package com.dnd10.iterview.dto;
 
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,5 +17,5 @@ public class QuestionRequestDto {
   private String content;
 
   private Long bookmarkCount; // 필요성?
-  private String tags;
+  private List<String> tags;
 }

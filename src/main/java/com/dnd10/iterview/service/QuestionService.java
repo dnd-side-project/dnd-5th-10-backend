@@ -12,6 +12,6 @@ public interface QuestionService {
   QuestionResponseDto addQuestion(Principal principal, QuestionRequestDto requestDto);
   List<QuestionResponseDto> getAllQuestions(Pageable pageable);
   List<QuestionResponseDto> getSearchQuestions(List<String> tagList, Pageable pageable);
-  List<QuestionResponseDto> getMyAllQuestions(Principal princiapl, Pageable pageable);
+  List<QuestionResponseDto> getMyAllQuestions(Principal principal, Pageable pageable);
   List<QuestionResponseDto> getQuiz();
 }

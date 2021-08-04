@@ -14,14 +14,11 @@ import com.dnd10.iterview.repository.UserRepository;
 import java.security.Principal;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -105,12 +102,11 @@ public class QuestionServiceImpl implements QuestionService {
     return saved;
   }
 
-  private void generateTags(Question question, String tags){
+  private void generateTags(Question question, List<String> tags){
 
     if(tags.isEmpty()) return; // 태그 없으면 그냥 없는채로 생성
 
-    String[] tagSplit = tags.split(",");
-    for(String s : tagSplit){
+    for(String s : tags){
       // 태그 미리 일부만 지정하기로 했으니 이외의 태그는 입력 못하도록
       Tag tag = tagRepository.findByName(s)
           .orElseThrow(() -> new IllegalArgumentException("해당 태그가 존재하지 않습니다."));
