@@ -143,7 +143,7 @@ public class QuestionServiceImpl implements QuestionService {
         .build();
   }
 
-  private List<QuestionResponseDto> generateQuestionResponseDtos(List<Question> questionList){
+  private List<QuestionResponseDto> generateQuestionResponseDtoList(List<Question> questionList){
     List<QuestionResponseDto> dtos = new ArrayList<>();
 
     for(Question q : questionList){
