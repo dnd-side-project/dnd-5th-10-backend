@@ -38,7 +38,7 @@ public class Question {
   private LocalDate create_date;
 
   @Column(nullable = false)
-  private Long bookmark_count;
+  private Long bookmarkCount; // _는 jpa에서 property를 찾는 경로 예약어이므로, 카멜케이스로 생성할 것.
 
   @ManyToOne(fetch = FetchType.LAZY)
   private User userManager;
@@ -48,11 +48,11 @@ public class Question {
   private List<QuestionTag> questionTagList = new ArrayList<>();
 
   public void likeUp(){
-    this.bookmark_count++;
+    this.bookmarkCount++;
   }
 
   public void likeDown(){
-    this.bookmark_count--;
+    this.bookmarkCount--;
   }
 
   public void addTag(QuestionTag tag){

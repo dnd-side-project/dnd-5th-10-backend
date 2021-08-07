@@ -1,6 +1,5 @@
 package com.dnd10.iterview.dto;
 
-import com.dnd10.iterview.entity.QuestionTag;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

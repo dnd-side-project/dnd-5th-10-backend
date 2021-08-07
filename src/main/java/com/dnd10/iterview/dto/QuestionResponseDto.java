@@ -1,17 +1,13 @@
 package com.dnd10.iterview.dto;
 
-import com.dnd10.iterview.entity.AuthProvider;
-import com.dnd10.iterview.entity.Question;
-import com.dnd10.iterview.entity.QuestionTag;
-import com.dnd10.iterview.entity.User;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import javax.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.Length;
 
 @Builder
 @Getter
@@ -19,13 +15,15 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class QuestionResponseDto {
 
-  @NotBlank
+  private Long id;
+
+  @Length(min = 20, max = 1000, message = "content length should be 20 ~ 1000")
   private String content;
 
-  private Long bookmark_count;
-  private LocalDate create_date;
+  private Long bookmarkCount;
 
-  private UserDto user;
+  private String username; // 보안상 유저 이메일, 닉네임만
+  private String email;
 
   private List<QuestionTagResponseDto> tagList = new ArrayList<>();
 }
