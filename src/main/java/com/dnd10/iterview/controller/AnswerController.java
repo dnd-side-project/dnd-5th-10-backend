@@ -3,6 +3,7 @@ package com.dnd10.iterview.controller;
 import com.dnd10.iterview.dto.AnswerDto;
 import com.dnd10.iterview.service.AnswerService;
 import io.swagger.annotations.ApiOperation;
+import java.security.Principal;
 import javax.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -40,9 +41,14 @@ public class AnswerController {
     return answerService.getAllAnswersByQuestion(questionId, pageable);
   }
 
-
+  @ApiOperation(value = "답변을 조회", notes = "답변ID로 <big>답변</big>을 조회한다.")
   @GetMapping("/{answerId}")
   public AnswerDto getAnswer(@PathVariable Long answerId) {
     return answerService.getAnswer(answerId);
+  }
+  @ApiOperation(value = "내가 한 답변을 조회", notes = "<big>내가 한 답변</big>을 조회한다.")
+  @GetMapping("/mine}")
+  public Page<AnswerDto> getMyAnswers(Principal principal) {
+    return answerService.getMyAnswers(principal);
   }
 }
