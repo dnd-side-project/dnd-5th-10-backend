@@ -12,6 +12,7 @@ import com.dnd10.iterview.repository.QuestionRepository;
 import com.dnd10.iterview.repository.UserRepository;
 import java.time.LocalDate;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -40,6 +41,13 @@ class AnswerServiceTest {
     this.likeAnswerRepository = likeAnswerRepository;
   }
 
+  @AfterEach
+  void removeAll() {
+    likeAnswerRepository.deleteAll();
+    answerRepository.deleteAll();
+    questionRepository.deleteAll();
+    userRepository.deleteAll();
+  }
 
   @Test
   void answer_create_and_find_should_work() {
@@ -50,33 +58,33 @@ class AnswerServiceTest {
         .provider(AuthProvider.google)
         .providerId("123")
         .build();
-    userRepository.save(testUser);
+    final User savedUser = userRepository.save(testUser);
 
     final Question question = Question.builder()
         .content("question")
-        .bookmark_count(0L)
+        .bookmarkCount(0L)
         .create_date(LocalDate.now())
-        .userManager(testUser)
+        .userManager(savedUser)
         .build();
-    questionRepository.save(question);
+    final Question savedQuestion = questionRepository.save(question);
 
     final Answer answer = Answer.builder()
         .content("test")
         .liked(0L)
         .user(testUser)
-        .question(question)
+        .question(savedQuestion)
         .build();
-    answerRepository.save(answer);
+    final Answer savedAnswer = answerRepository.save(answer);
 
     final AnswerDto answerDto = AnswerDto.builder()
         .content(answer.getContent())
         .liked(answer.getLiked())
-        .questionId(question.getId())
-        .userId(testUser.getId())
+        .questionId(savedQuestion.getId())
+        .userId(savedUser.getId())
         .build();
     final AnswerDto answerSaved = answerService.createAnswer(answerDto);
 
-    final Page<AnswerDto> allAnswers = answerService.getAllAnswersByQuestion(1L, Pageable.ofSize(2));
+    final Page<AnswerDto> allAnswers = answerService.getAllAnswersByQuestion(savedAnswer.getId(), Pageable.ofSize(2));
     Assertions.assertThat(allAnswers.getContent().get(0).getContent()).isEqualTo(answerSaved.getContent());
 
   }
@@ -91,27 +99,27 @@ class AnswerServiceTest {
         .provider(AuthProvider.google)
         .providerId("123")
         .build();
-    userRepository.save(testUser);
+    final User savedUser = userRepository.save(testUser);
 
     final Question question = Question.builder()
         .content("question")
-        .bookmark_count(0L)
+        .bookmarkCount(0L)
         .create_date(LocalDate.now())
-        .userManager(testUser)
+        .userManager(savedUser)
         .build();
-    questionRepository.save(question);
+    final Question savedQuestion = questionRepository.save(question);
 
     final Answer answer = Answer.builder()
         .content("test")
         .liked(0L)
-        .user(testUser)
-        .question(question)
+        .user(savedUser)
+        .question(savedQuestion)
         .build();
-    answerRepository.save(answer);
+    final Answer savedAnswer = answerRepository.save(answer);
 
     LikeAnswer likeAnswer = LikeAnswer.builder()
-        .userManager(testUser)
-        .answerManager(answer)
+        .userManager(savedUser)
+        .answerManager(savedAnswer)
         .build();
 
     final LikeAnswer saved = likeAnswerRepository.save(likeAnswer);
