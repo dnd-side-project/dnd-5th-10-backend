@@ -13,5 +13,5 @@ public interface AnswerService {
 
   AnswerDto getAnswer(Long id);
 
-  Page<AnswerDto> getMyAnswers(Principal principal);
+  Page<AnswerDto> getMyAnswers(Principal principal, Pageable pageable);
 }

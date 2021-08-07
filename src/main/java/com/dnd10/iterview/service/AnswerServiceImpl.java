@@ -50,10 +50,10 @@ public class AnswerServiceImpl implements AnswerService {
   }
 
   @Override
-  public Page<AnswerDto> getMyAnswers(Principal principal) {
+  public Page<AnswerDto> getMyAnswers(Principal principal, Pageable pageable) {
     final User user = userRepository.findUserByEmail(principal.getName())
         .orElseThrow(IllegalArgumentException::new);
-    final Page<Answer> answers = answerRepository.findAllByUser(user);
+    final Page<Answer> answers = answerRepository.findAllByUser(user, pageable);
 
     return answers.map(AnswerDto::new);
   }

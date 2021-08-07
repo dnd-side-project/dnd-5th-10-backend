@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,19 +37,19 @@ public class AnswerController {
 
   @ApiOperation(value = "문제의 답변 조회", notes = "<big>한 문제의 모든 답변</big>을 조회한다.")
   @GetMapping("/question/{questionId}")
-  public Page<AnswerDto> getAllAnswersByQuestion(@PathVariable Long questionId, @PageableDefault(size = 5, sort = "liked",
+  public ResponseEntity<Page<AnswerDto>> getAllAnswersByQuestion(@PathVariable Long questionId, @PageableDefault(size = 5, sort = "liked",
       direction = Sort.Direction.DESC) Pageable pageable) {
-    return answerService.getAllAnswersByQuestion(questionId, pageable);
+    return ResponseEntity.ok(answerService.getAllAnswersByQuestion(questionId, pageable));
   }
 
   @ApiOperation(value = "답변을 조회", notes = "답변ID로 <big>답변</big>을 조회한다.")
   @GetMapping("/{answerId}")
-  public AnswerDto getAnswer(@PathVariable Long answerId) {
-    return answerService.getAnswer(answerId);
+  public ResponseEntity<AnswerDto> getAnswer(@PathVariable Long answerId) {
+    return ResponseEntity.ok(answerService.getAnswer(answerId));
   }
   @ApiOperation(value = "내가 한 답변을 조회", notes = "<big>내가 한 답변</big>을 조회한다.")
-  @GetMapping("/mine}")
-  public Page<AnswerDto> getMyAnswers(Principal principal) {
-    return answerService.getMyAnswers(principal);
+  @GetMapping("/mine")
+  public ResponseEntity<Page<AnswerDto>> getMyAnswers(Principal principal,Pageable pageable) {
+    return ResponseEntity.ok(answerService.getMyAnswers(principal, pageable));
   }
 }

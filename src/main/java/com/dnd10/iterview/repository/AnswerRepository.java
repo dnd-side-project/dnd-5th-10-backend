@@ -16,5 +16,5 @@ public interface AnswerRepository extends JpaRepository<Answer,Long> {
   Page<Answer> findAll(Pageable pageable);
   Page<Answer> findAnswersByQuestion(Question question, Pageable pageable);
 
-  Page<Answer> findAllByUser(User user);
+  Page<Answer> findAllByUser(User user, Pageable pageable);
 }
