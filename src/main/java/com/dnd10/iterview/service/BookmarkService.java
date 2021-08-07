@@ -10,4 +10,5 @@ public interface BookmarkService {
   BookmarkResponseDto addBookmark(Principal principal, BookmarkRequestDto bookmarkRequestDto);
   BookmarkResponseDto updateBookmark(Principal principal, Long bookmarkId, BookmarkRequestDto bookmarkRequestDto);
   List<BookmarkResponseDto> getMyBookmark(Principal principal);
+  void deleteBookmark(Principal principal, Long bookmarkId);
 }

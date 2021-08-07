@@ -72,6 +72,23 @@ public class BookmarkServiceImpl implements BookmarkService {
     return generateBookmarkResponseDtoList(bookmarkList);
   }
 
+  @Override
+  public void deleteBookmark(Principal principal, Long bookmarkId){
+    User user = userRepository.findUserByEmail(principal.getName())
+        .orElseThrow(() -> new IllegalArgumentException("해당 유저가 존재하지 않습니다."));
+
+    Bookmark bookmark = bookmarkRepository.findById(bookmarkId)
+        .orElseThrow(() -> new IllegalArgumentException("해당 북마크가 존재하지 않습니다."));
+
+    if(!bookmark.getUserManager().getId().equals(user.getId())){
+      throw new IllegalArgumentException("해당 북마크의 소유자가 아닙니다.");
+    } // 다른 유저가 북마크 변경 못하도록.
+
+    // todo: 북마크 폴더 내 북마크 한 문제 정보 삭제.
+
+    bookmarkRepository.delete(bookmark);
+  }
+
   private BookmarkResponseDto generateBookmarkResponseDto(Bookmark bookmark){
     BookmarkResponseDto dto = BookmarkResponseDto.builder()
         .id(bookmark.getId())
