@@ -26,9 +26,6 @@ public class BookmarkController {
    * 내 북마크 폴더 조회 v
    * 북마크 폴더 이름 수정 v
    * 북마크 폴더 삭제
-   * 문제 북마크 폴더에 추가
-   * 문제 북마크 폴더에서 삭제
-   * 북마크 폴더 내 문제 조회 - page
    */
 
   private final BookmarkService bookmarkService;
