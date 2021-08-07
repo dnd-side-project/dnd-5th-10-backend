@@ -32,10 +32,10 @@ public class Answer extends BaseTimeEntity {
   private Long liked;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  private Question questionManager;
+  private Question question;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  private User userManager;
+  private User user;
 
   // answer는 일단 수정 불가능?
 
@@ -46,5 +46,6 @@ public class Answer extends BaseTimeEntity {
   public void likeDown(){
     this.liked--;
   }
+
 
 }

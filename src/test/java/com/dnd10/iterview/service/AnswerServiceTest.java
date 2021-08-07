@@ -11,12 +11,13 @@ import com.dnd10.iterview.repository.LikeAnswerRepository;
 import com.dnd10.iterview.repository.QuestionRepository;
 import com.dnd10.iterview.repository.UserRepository;
 import java.time.LocalDate;
-import java.util.List;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class AnswerServiceTest {
@@ -45,7 +46,7 @@ class AnswerServiceTest {
 
     final User testUser = User.builder()
         .username("testUser")
-        .email("test@gmail.com")
+        .email("testANSWER@gmail.com")
         .provider(AuthProvider.google)
         .providerId("123")
         .build();
@@ -62,8 +63,8 @@ class AnswerServiceTest {
     final Answer answer = Answer.builder()
         .content("test")
         .liked(0L)
-        .userManager(testUser)
-        .questionManager(question)
+        .user(testUser)
+        .question(question)
         .build();
     answerRepository.save(answer);
 
@@ -75,8 +76,8 @@ class AnswerServiceTest {
         .build();
     final AnswerDto answerSaved = answerService.createAnswer(answerDto);
 
-    final List<AnswerDto> allAnswers = answerService.getAllAnswersByQuestion(1L,"default");
-    Assertions.assertThat(allAnswers.get(0).getContent()).isEqualTo(answerSaved.getContent());
+    final Page<AnswerDto> allAnswers = answerService.getAllAnswersByQuestion(1L, Pageable.ofSize(2));
+    Assertions.assertThat(allAnswers.getContent().get(0).getContent()).isEqualTo(answerSaved.getContent());
 
   }
 
@@ -103,8 +104,8 @@ class AnswerServiceTest {
     final Answer answer = Answer.builder()
         .content("test")
         .liked(0L)
-        .userManager(testUser)
-        .questionManager(question)
+        .user(testUser)
+        .question(question)
         .build();
     answerRepository.save(answer);
 

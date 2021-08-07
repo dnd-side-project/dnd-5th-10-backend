@@ -2,9 +2,7 @@ package com.dnd10.iterview.controller;
 
 import com.dnd10.iterview.dto.AnswerDto;
 import com.dnd10.iterview.dto.LikeAnswerDto;
-import com.dnd10.iterview.entity.LikeAnswer;
 import com.dnd10.iterview.service.LikeAnswerService;
-import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -34,13 +32,9 @@ public class LikeAnswerController {
     return likeAnswerService.delete(likeAnswerDto);
   }
 
-  @GetMapping("/{userId}")
-  public List<AnswerDto> getAllAnswersLiked(@PathVariable Long userId) {
-    return likeAnswerService.getAllAnswerLiked(userId);
-  }
   @GetMapping("/page/{userId}")
-  public Page<LikeAnswer> getAllAnswersLiked2(final Pageable pageable, @PathVariable Long userId) {
-    return likeAnswerService.getAllAnswerLiked2(userId,pageable);
+  public Page<AnswerDto> getAllAnswersLiked(final Pageable pageable, @PathVariable Long userId) {
+    return likeAnswerService.getAllAnswerLiked(userId,pageable);
   }
 
 }

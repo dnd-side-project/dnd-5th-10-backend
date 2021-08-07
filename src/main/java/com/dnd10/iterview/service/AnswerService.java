@@ -1,11 +1,12 @@
 package com.dnd10.iterview.service;
 
 import com.dnd10.iterview.dto.AnswerDto;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface AnswerService {
 
-  List<AnswerDto> getAllAnswersByQuestion(Long id, String order);
+  Page<AnswerDto> getAllAnswersByQuestion(Long id, Pageable pageable);
 
   AnswerDto createAnswer(AnswerDto answerDto);
 

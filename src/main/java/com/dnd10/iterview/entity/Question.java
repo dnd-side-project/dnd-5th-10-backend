@@ -27,7 +27,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 public class Question {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "question_id")
+  @Column
   private Long id;
 
   @Column(nullable = false)

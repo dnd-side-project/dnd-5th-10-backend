@@ -22,16 +22,16 @@ public class AnswerDto {
   public AnswerDto(Answer answer) {
     this.content = answer.getContent();
     this.liked = answer.getLiked();
-    this.questionId = answer.getQuestionManager().getId();
-    this.userId = answer.getUserManager().getId();
+    this.questionId = answer.getQuestion().getId();
+    this.userId = answer.getUser().getId();
   }
 
   public Answer toEntity(User user, Question question) {
     return Answer.builder()
         .content(content)
         .liked(liked)
-        .userManager(user)
-        .questionManager(question)
+        .user(user)
+        .question(question)
         .build();
   }
 }

@@ -8,14 +8,14 @@ import com.dnd10.iterview.entity.User;
 import com.dnd10.iterview.repository.AnswerRepository;
 import com.dnd10.iterview.repository.LikeAnswerRepository;
 import com.dnd10.iterview.repository.UserRepository;
-import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
+@Transactional
 @Service
 public class LikeAnswerServiceImpl implements LikeAnswerService {
 
@@ -30,6 +30,10 @@ public class LikeAnswerServiceImpl implements LikeAnswerService {
         .orElseThrow(IllegalArgumentException::new);
     final Answer answer = answerRepository.findById(likeAnswerDto.getAnswerId())
         .orElseThrow(IllegalArgumentException::new);
+
+    if (likeAnswerRepository.findByUserManagerAndAnswerManager(user, answer).isPresent()) {
+      throw new IllegalArgumentException("이미 좋아요한 답변입니다.");
+    }
 
     final LikeAnswer likeAnswer = LikeAnswer.builder()
         .userManager(user)
@@ -50,18 +54,9 @@ public class LikeAnswerServiceImpl implements LikeAnswerService {
   }
 
   @Override
-  public List<AnswerDto> getAllAnswerLiked(Long userId) {
-    //TODO:: org.hibernate.LazyInitializationException: could not initialize proxy [com.dnd10.iterview.entity.Answer#1] - no Session
-    final List<LikeAnswer> likedAnswers = likeAnswerRepository.findAllByUserManager_Id(userId)
-        .orElseThrow(IllegalAccessError::new);
-    return likedAnswers.stream().map(LikeAnswer::getAnswerManager).map(AnswerDto::new)
-        .collect(Collectors.toList());
-  }
-
-  @Override
-  public Page<LikeAnswer> getAllAnswerLiked2(Long userId, Pageable pageable) {
+  public Page<AnswerDto> getAllAnswerLiked(Long userId, Pageable pageable) {
     final Page<LikeAnswer> likeAnswerPage = likeAnswerRepository
         .findAllByUserManager_Id(userId, pageable);
-    return likeAnswerPage;
+    return likeAnswerPage.map(likeAnswer -> new AnswerDto(likeAnswer.getAnswerManager()));
   }
 }
