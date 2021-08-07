@@ -1,6 +1,6 @@
 package com.dnd10.iterview.service;
 
-import com.dnd10.iterview.dto.BookmarkQuestionResponseDto;
+import com.dnd10.iterview.dto.BookmarkQuestionDto;
 import com.dnd10.iterview.dto.QuestionResponseDto;
 import com.dnd10.iterview.dto.QuestionTagResponseDto;
 import com.dnd10.iterview.entity.Bookmark;
@@ -15,7 +15,10 @@ import com.dnd10.iterview.repository.UserRepository;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,7 +33,7 @@ public class BookmarkQuestionServiceImpl implements BookmarkQuestionService {
   private final UserRepository userRepository;
 
   @Override
-  public BookmarkQuestionResponseDto addBookmarkQuestion(Principal principal, Long questionId,
+  public BookmarkQuestionDto addBookmarkQuestion(Principal principal, Long questionId,
       Long bookmarkId) {
 
     User user = userRepository.findUserByEmail(principal.getName())
@@ -46,6 +49,8 @@ public class BookmarkQuestionServiceImpl implements BookmarkQuestionService {
       throw new IllegalArgumentException("해당 북마크의 소유자가 아닙니다.");
     } // 다른 유저가 북마크 변경 못하도록.
 
+    question.likeUp(); // bookmarkCount 올리기
+
     BookmarkQuestion bookmarkQuestion = BookmarkQuestion.builder()
         .bookmarkManager(bookmark)
         .questionManager(question)
@@ -53,12 +58,30 @@ public class BookmarkQuestionServiceImpl implements BookmarkQuestionService {
 
     BookmarkQuestion saved = bookmarkQuestionRepository.save(bookmarkQuestion);
 
-    return generateBookmarkQuestionResponseDto(saved);
+    return generateBookmarkQuestionDto(saved);
   }
 
-  private BookmarkQuestionResponseDto generateBookmarkQuestionResponseDto(BookmarkQuestion bookmarkQuestion){
+  @Override
+  public List<BookmarkQuestionDto> getBookmarkQuestion(Principal principal, Long bookmarkId, Pageable pageable){
 
-    return BookmarkQuestionResponseDto.builder()
+    User user = userRepository.findUserByEmail(principal.getName())
+        .orElseThrow(() -> new IllegalArgumentException("해당 유저가 존재하지 않습니다."));
+
+    Bookmark bookmark = bookmarkRepository.findById(bookmarkId)
+        .orElseThrow(() -> new IllegalArgumentException("해당 북마크가 존재하지 않습니다."));
+
+    if(!bookmark.getUserManager().getId().equals(user.getId())){
+      throw new IllegalArgumentException("해당 북마크의 소유자가 아닙니다.");
+    }
+
+    Page<BookmarkQuestion> bookmarkQuestionPage = bookmarkQuestionRepository.findAllByBookmarkManager(bookmark, pageable);
+
+    return mappingPageToDto(bookmarkQuestionPage);
+  }
+
+  private BookmarkQuestionDto generateBookmarkQuestionDto(BookmarkQuestion bookmarkQuestion){
+
+    return BookmarkQuestionDto.builder()
         .id(bookmarkQuestion.getId())
         .bookmarkId(bookmarkQuestion.getBookmarkManager().getId())
         .question(generateQuestionResponseDto(bookmarkQuestion.getQuestionManager()))
@@ -87,4 +110,11 @@ public class BookmarkQuestionServiceImpl implements BookmarkQuestionService {
         .tagList(dtoList)
         .build();
   } // todo: 굳이 복붙 말고, 그냥 service 주입해서 쓸지 고민
+
+  private List<BookmarkQuestionDto> mappingPageToDto(Page<BookmarkQuestion> bookmarkQuestionPage){
+    List<BookmarkQuestionDto> dtoList = bookmarkQuestionPage.stream().map(
+        bq -> generateBookmarkQuestionDto(bq)).collect(Collectors.toList());
+
+    return dtoList;
+  }
 }

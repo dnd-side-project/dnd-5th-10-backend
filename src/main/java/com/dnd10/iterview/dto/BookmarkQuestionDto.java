@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class BookmarkQuestionResponseDto {
+public class BookmarkQuestionDto {
   private Long id;
   private QuestionResponseDto question;
   private Long bookmarkId;
