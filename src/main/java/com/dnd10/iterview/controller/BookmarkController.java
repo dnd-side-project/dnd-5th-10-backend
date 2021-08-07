@@ -26,7 +26,7 @@ public class BookmarkController {
    * 북마크 폴더 생성 v
    * 내 북마크 폴더 조회 v
    * 북마크 폴더 이름 수정 v
-   * 북마크 폴더 삭제
+   * 북마크 폴더 삭제 v
    */
 
   private final BookmarkService bookmarkService;

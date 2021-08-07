@@ -79,6 +79,23 @@ public class BookmarkQuestionServiceImpl implements BookmarkQuestionService {
     return mappingPageToDto(bookmarkQuestionPage);
   }
 
+  @Override
+  public void deleteBookmarkQuestion(Principal principal, Long bookmarkQuestionId) {
+    User user = userRepository.findUserByEmail(principal.getName())
+        .orElseThrow(() -> new IllegalArgumentException("해당 유저가 존재하지 않습니다."));
+
+    BookmarkQuestion bookmarkQuestion = bookmarkQuestionRepository.findById(bookmarkQuestionId)
+        .orElseThrow(() -> new IllegalArgumentException("해당 북마크한 문제가 존재하지 않습니다."));
+
+    if(!bookmarkQuestion.getBookmarkManager().getUserManager().getId().equals(user.getId())){
+      throw new IllegalArgumentException("해당 북마크의 소유자가 아닙니다.");
+    }
+
+    bookmarkQuestion.getQuestionManager().likeDown(); // bookmarkCount 낮추기
+
+    bookmarkQuestionRepository.delete(bookmarkQuestion);
+  }
+
   private BookmarkQuestionDto generateBookmarkQuestionDto(BookmarkQuestion bookmarkQuestion){
 
     return BookmarkQuestionDto.builder()

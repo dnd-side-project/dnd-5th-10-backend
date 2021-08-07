@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class BookmarkQuestionController {
   /**
    * 문제 북마크 폴더에 추가 v
-   * 문제 북마크 폴더에서 삭제
+   * 문제 북마크 폴더에서 삭제 v
    * 북마크 폴더 내 문제 조회 - page v
    */
 
@@ -43,5 +44,13 @@ public class BookmarkQuestionController {
     List<BookmarkQuestionDto> dtoList = bookmarkQuestionService.getBookmarkQuestion(principal, bookmarkId, pageable);
 
     return ResponseEntity.ok(dtoList);
+  }
+
+  @ApiOperation(value = "문제 북마크 취소", notes = "<big>북마크 폴더에서 북마크한 문제를 삭제</big>한다.")
+  @DeleteMapping("/{bookmarkQuestionId}")
+  public ResponseEntity deleteBookmarkQuestion(Principal principal, @PathVariable Long bookmarkQuestionId){
+    bookmarkQuestionService.deleteBookmarkQuestion(principal, bookmarkQuestionId);
+
+    return ResponseEntity.ok().build();
   }
 }

@@ -3,6 +3,7 @@ package com.dnd10.iterview.service;
 import com.dnd10.iterview.dto.BookmarkRequestDto;
 import com.dnd10.iterview.dto.BookmarkResponseDto;
 import com.dnd10.iterview.entity.Bookmark;
+import com.dnd10.iterview.entity.BookmarkQuestion;
 import com.dnd10.iterview.entity.User;
 import com.dnd10.iterview.repository.BookmarkQuestionRepository;
 import com.dnd10.iterview.repository.BookmarkRepository;
@@ -84,7 +85,12 @@ public class BookmarkServiceImpl implements BookmarkService {
       throw new IllegalArgumentException("해당 북마크의 소유자가 아닙니다.");
     } // 다른 유저가 북마크 변경 못하도록.
 
-    // todo: 북마크 폴더 내 북마크 한 문제 정보 삭제.
+    List<BookmarkQuestion> bookmarkQuestionList = bookmarkQuestionRepository.findAllByBookmarkManager(bookmark);
+
+    for(BookmarkQuestion b : bookmarkQuestionList){
+      b.getQuestionManager().likeDown();
+      bookmarkQuestionRepository.delete(b);
+    } // 북마크 폴더 내 북마크 한 문제 정보 삭제.
 
     bookmarkRepository.delete(bookmark);
   }

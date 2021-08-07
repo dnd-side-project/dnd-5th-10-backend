@@ -8,4 +8,5 @@ import org.springframework.data.domain.Pageable;
 public interface BookmarkQuestionService {
   BookmarkQuestionDto addBookmarkQuestion(Principal principal, Long questionId, Long bookmarkId);
   List<BookmarkQuestionDto> getBookmarkQuestion(Principal principal, Long bookmarkId, Pageable pageable);
+  void deleteBookmarkQuestion(Principal principal, Long bookmarkQuestionId);
 }
