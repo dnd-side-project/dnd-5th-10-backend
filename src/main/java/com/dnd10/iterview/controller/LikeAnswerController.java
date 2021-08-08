@@ -4,6 +4,7 @@ import com.dnd10.iterview.dto.AnswerResponseDto;
 import com.dnd10.iterview.dto.LikeAnswerResponseDto;
 import com.dnd10.iterview.service.LikeAnswerService;
 import io.swagger.annotations.ApiOperation;
+import java.security.Principal;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -11,7 +12,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/v1/like/answer")
+@RequestMapping("/api/v1/answer/like")
 public class LikeAnswerController {
 
   private final LikeAnswerService likeAnswerService;
@@ -37,9 +37,10 @@ public class LikeAnswerController {
   }
 
   @ApiOperation(value = "내가 좋아한 답변을 조회", notes = "<big>내가 좋아요한 답변</big>을 조회한다.")
-  @GetMapping("/page/{userId}")
-  public ResponseEntity<Page<AnswerResponseDto>> getAllAnswersLiked(final Pageable pageable, @PathVariable Long userId) {
-    return ResponseEntity.ok(likeAnswerService.getAllAnswerLiked(userId,pageable));
+  @GetMapping("/mine")
+  public ResponseEntity<Page<AnswerResponseDto>> getAllAnswersLiked(final Pageable pageable,
+      Principal principal) {
+    return ResponseEntity.ok(likeAnswerService.getAllAnswerLiked(principal,pageable));
   }
 
 }

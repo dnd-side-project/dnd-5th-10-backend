@@ -8,6 +8,7 @@ import com.dnd10.iterview.entity.User;
 import com.dnd10.iterview.repository.AnswerRepository;
 import com.dnd10.iterview.repository.LikeAnswerRepository;
 import com.dnd10.iterview.repository.UserRepository;
+import java.security.Principal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -54,9 +55,11 @@ public class LikeAnswerServiceImpl implements LikeAnswerService {
   }
 
   @Override
-  public Page<AnswerResponseDto> getAllAnswerLiked(Long userId, Pageable pageable) {
+  public Page<AnswerResponseDto> getAllAnswerLiked(Principal principal, Pageable pageable) {
+    final User user = userRepository.findUserByEmail(principal.getName())
+        .orElseThrow(() -> new IllegalArgumentException("토큰 사용자가 가입되어있지 않습니다."));
     final Page<LikeAnswer> likeAnswerPage = likeAnswerRepository
-        .findAllByUserManager_Id(userId, pageable);
+        .findAllByUserManager_Id(user.getId(), pageable);
     return likeAnswerPage.map(likeAnswer -> new AnswerResponseDto(likeAnswer.getAnswerManager()));
   }
 }
