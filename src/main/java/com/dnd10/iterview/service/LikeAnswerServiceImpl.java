@@ -1,13 +1,14 @@
 package com.dnd10.iterview.service;
 
-import com.dnd10.iterview.dto.AnswerDto;
-import com.dnd10.iterview.dto.LikeAnswerDto;
+import com.dnd10.iterview.dto.AnswerResponseDto;
+import com.dnd10.iterview.dto.LikeAnswerResponseDto;
 import com.dnd10.iterview.entity.Answer;
 import com.dnd10.iterview.entity.LikeAnswer;
 import com.dnd10.iterview.entity.User;
 import com.dnd10.iterview.repository.AnswerRepository;
 import com.dnd10.iterview.repository.LikeAnswerRepository;
 import com.dnd10.iterview.repository.UserRepository;
+import java.security.Principal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,11 +25,11 @@ public class LikeAnswerServiceImpl implements LikeAnswerService {
   private final AnswerRepository answerRepository;
 
   @Override
-  public LikeAnswerDto create(LikeAnswerDto likeAnswerDto) {
+  public LikeAnswerResponseDto create(Long answerId, Principal principal) {
 
-    final User user = userRepository.findUserById(likeAnswerDto.getUserId())
+    final User user = userRepository.findUserByEmail(principal.getName())
         .orElseThrow(IllegalArgumentException::new);
-    final Answer answer = answerRepository.findById(likeAnswerDto.getAnswerId())
+    final Answer answer = answerRepository.findById(answerId)
         .orElseThrow(IllegalArgumentException::new);
 
     if (likeAnswerRepository.findByUserManagerAndAnswerManager(user, answer).isPresent()) {
@@ -41,22 +42,30 @@ public class LikeAnswerServiceImpl implements LikeAnswerService {
         .build();
     final LikeAnswer saved = likeAnswerRepository.save(likeAnswer);
 
-    return LikeAnswerDto.of(saved);
+    return LikeAnswerResponseDto.of(saved);
   }
 
   @Override
-  public LikeAnswerDto delete(LikeAnswerDto likeAnswerDto) {
+  public LikeAnswerResponseDto delete(Long answerId, Principal principal) {
+    final User user = userRepository.findUserByEmail(principal.getName())
+        .orElseThrow(IllegalArgumentException::new);
+    final Answer answer = answerRepository.findById(answerId)
+        .orElseThrow(IllegalArgumentException::new);
+
     final LikeAnswer likeAnswer = likeAnswerRepository
-        .findByUserManager_IdAndAnswerManager_Id(likeAnswerDto.getUserId(),
-            likeAnswerDto.getAnswerId()).orElseThrow(IllegalArgumentException::new);
+        .findByUserManagerAndAnswerManager(user, answer)
+        .orElseThrow(() -> new IllegalArgumentException("해당 답변의 좋아요 기록이 없습니다."));
+
     likeAnswerRepository.delete(likeAnswer);
-    return LikeAnswerDto.of(likeAnswer);
+    return LikeAnswerResponseDto.of(likeAnswer);
   }
 
   @Override
-  public Page<AnswerDto> getAllAnswerLiked(Long userId, Pageable pageable) {
+  public Page<AnswerResponseDto> getAllAnswerLiked(Principal principal, Pageable pageable) {
+    final User user = userRepository.findUserByEmail(principal.getName())
+        .orElseThrow(() -> new IllegalArgumentException("토큰 사용자가 가입되어있지 않습니다."));
     final Page<LikeAnswer> likeAnswerPage = likeAnswerRepository
-        .findAllByUserManager_Id(userId, pageable);
-    return likeAnswerPage.map(likeAnswer -> new AnswerDto(likeAnswer.getAnswerManager()));
+        .findAllByUserManager_Id(user.getId(), pageable);
+    return likeAnswerPage.map(likeAnswer -> new AnswerResponseDto(likeAnswer.getAnswerManager()));
   }
 }

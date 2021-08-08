@@ -1,6 +1,7 @@
 package com.dnd10.iterview.controller;
 
-import com.dnd10.iterview.dto.AnswerDto;
+import com.dnd10.iterview.dto.AnswerRequestDto;
+import com.dnd10.iterview.dto.AnswerResponseDto;
 import com.dnd10.iterview.service.AnswerService;
 import io.swagger.annotations.ApiOperation;
 import java.security.Principal;
@@ -31,25 +32,26 @@ public class AnswerController {
   }
 
   @PostMapping
-  public AnswerDto submitAnswer(@RequestBody @Valid AnswerDto answerDto) {
-    return answerService.createAnswer(answerDto);
+  public AnswerResponseDto submitAnswer(@RequestBody @Valid AnswerRequestDto answerRequestDto) {
+    return answerService.createAnswer(answerRequestDto);
   }
 
   @ApiOperation(value = "문제의 답변 조회", notes = "<big>한 문제의 모든 답변</big>을 조회한다.")
   @GetMapping("/question/{questionId}")
-  public ResponseEntity<Page<AnswerDto>> getAllAnswersByQuestion(@PathVariable Long questionId, @PageableDefault(size = 5, sort = "liked",
+  public ResponseEntity<Page<AnswerResponseDto>> getAllAnswersByQuestion(@PathVariable Long questionId, @PageableDefault(size = 5, sort = "liked",
       direction = Sort.Direction.DESC) Pageable pageable) {
     return ResponseEntity.ok(answerService.getAllAnswersByQuestion(questionId, pageable));
   }
 
   @ApiOperation(value = "답변을 조회", notes = "답변ID로 <big>답변</big>을 조회한다.")
   @GetMapping("/{answerId}")
-  public ResponseEntity<AnswerDto> getAnswer(@PathVariable Long answerId) {
+  public ResponseEntity<AnswerResponseDto> getAnswer(@PathVariable Long answerId) {
     return ResponseEntity.ok(answerService.getAnswer(answerId));
   }
   @ApiOperation(value = "내가 한 답변을 조회", notes = "<big>내가 한 답변</big>을 조회한다.")
   @GetMapping("/mine")
-  public ResponseEntity<Page<AnswerDto>> getMyAnswers(Principal principal,Pageable pageable) {
+  public ResponseEntity<Page<AnswerResponseDto>> getMyAnswers(Principal principal, @PageableDefault(size = 5, sort = "liked",
+      direction = Sort.Direction.DESC) Pageable pageable) {
     return ResponseEntity.ok(answerService.getMyAnswers(principal, pageable));
   }
 }

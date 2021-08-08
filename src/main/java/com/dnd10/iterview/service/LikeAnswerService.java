@@ -1,15 +1,16 @@
 package com.dnd10.iterview.service;
 
-import com.dnd10.iterview.dto.AnswerDto;
-import com.dnd10.iterview.dto.LikeAnswerDto;
+import com.dnd10.iterview.dto.AnswerResponseDto;
+import com.dnd10.iterview.dto.LikeAnswerResponseDto;
+import java.security.Principal;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface LikeAnswerService {
 
-  LikeAnswerDto create(LikeAnswerDto likeAnswerDto);
+  LikeAnswerResponseDto create(Long answerId, Principal principal);
 
-  LikeAnswerDto delete(LikeAnswerDto likeAnswerDto);
+  LikeAnswerResponseDto delete(Long answerId, Principal principal);
 
-  Page<AnswerDto> getAllAnswerLiked(Long userId, Pageable pageable);
+  Page<AnswerResponseDto> getAllAnswerLiked(Principal principal, Pageable pageable);
 }

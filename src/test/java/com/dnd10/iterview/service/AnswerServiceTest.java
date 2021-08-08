@@ -1,6 +1,7 @@
 package com.dnd10.iterview.service;
 
-import com.dnd10.iterview.dto.AnswerDto;
+import com.dnd10.iterview.dto.AnswerRequestDto;
+import com.dnd10.iterview.dto.AnswerResponseDto;
 import com.dnd10.iterview.entity.Answer;
 import com.dnd10.iterview.entity.AuthProvider;
 import com.dnd10.iterview.entity.LikeAnswer;
@@ -76,26 +77,26 @@ class AnswerServiceTest {
         .build();
     final Answer savedAnswer = answerRepository.save(answer);
 
-    final AnswerDto answerDto = AnswerDto.builder()
+    final AnswerRequestDto answerRequestDto = AnswerRequestDto.builder()
         .content(answer.getContent())
         .liked(answer.getLiked())
         .questionId(savedQuestion.getId())
         .userId(savedUser.getId())
         .build();
-    final AnswerDto answerSaved = answerService.createAnswer(answerDto);
+    final AnswerResponseDto answerSaved = answerService.createAnswer(answerRequestDto);
 
-    final Page<AnswerDto> allAnswers = answerService.getAllAnswersByQuestion(savedAnswer.getId(), Pageable.ofSize(2));
+    final Page<AnswerResponseDto> allAnswers = answerService.getAllAnswersByQuestion(savedQuestion.getId(), Pageable.ofSize(2));
     Assertions.assertThat(allAnswers.getContent().get(0).getContent()).isEqualTo(answerSaved.getContent());
 
   }
 
 
   @Test
-  void like_answer_should_saved() {
+  void like_answer_should_be_saved() {
 
     final User testUser = User.builder()
         .username("testUser")
-        .email("test@gmail.com")
+        .email("testUser@gmail.com")
         .provider(AuthProvider.google)
         .providerId("123")
         .build();
