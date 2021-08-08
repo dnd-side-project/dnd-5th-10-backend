@@ -1,6 +1,5 @@
 package com.dnd10.iterview.entity;
 
-import java.time.LocalDate;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -13,7 +12,6 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
 @Getter
@@ -21,7 +19,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
-public class Answer {
+public class Answer extends BaseTimeEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "answer_id")
@@ -31,27 +29,15 @@ public class Answer {
   private String content;
 
   @Column(nullable = false)
-  @DateTimeFormat(pattern = "yyyy-MM-dd")
-  private LocalDate create_date;
-
-  @Column(nullable = false)
-  @DateTimeFormat(pattern = "yyyy-MM-dd")
-  private LocalDate update_date;
-
-  @Column(nullable = false)
   private Long liked;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  private Question questionManager;
+  private Question question;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  private User userManager;
+  private User user;
 
   // answer는 일단 수정 불가능?
-
-  public void updateDate(LocalDate new_date){
-    this.update_date = new_date;
-  }
 
   public void likeUp(){
     this.liked++;
@@ -60,5 +46,6 @@ public class Answer {
   public void likeDown(){
     this.liked--;
   }
+
 
 }
