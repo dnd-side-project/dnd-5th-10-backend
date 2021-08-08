@@ -15,6 +15,5 @@ import org.springframework.transaction.annotation.Transactional;
 public interface LikeAnswerRepository extends JpaRepository<LikeAnswer, Long> {
 
   Page<LikeAnswer> findAllByUserManager_Id(Long id, Pageable pageable);
-  Optional<LikeAnswer> findByUserManager_IdAndAnswerManager_Id(Long userId, Long AnswerId);
   Optional<LikeAnswer> findByUserManagerAndAnswerManager(User user, Answer answer);
 }

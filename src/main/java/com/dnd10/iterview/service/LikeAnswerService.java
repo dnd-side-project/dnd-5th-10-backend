@@ -8,9 +8,9 @@ import org.springframework.data.domain.Pageable;
 
 public interface LikeAnswerService {
 
-  LikeAnswerResponseDto create(LikeAnswerResponseDto likeAnswerResponseDto);
+  LikeAnswerResponseDto create(Long answerId, Principal principal);
 
-  LikeAnswerResponseDto delete(LikeAnswerResponseDto likeAnswerResponseDto);
+  LikeAnswerResponseDto delete(Long answerId, Principal principal);
 
   Page<AnswerResponseDto> getAllAnswerLiked(Principal principal, Pageable pageable);
 }

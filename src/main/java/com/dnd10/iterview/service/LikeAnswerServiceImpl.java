@@ -25,11 +25,11 @@ public class LikeAnswerServiceImpl implements LikeAnswerService {
   private final AnswerRepository answerRepository;
 
   @Override
-  public LikeAnswerResponseDto create(LikeAnswerResponseDto likeAnswerResponseDto) {
+  public LikeAnswerResponseDto create(Long answerId, Principal principal) {
 
-    final User user = userRepository.findUserById(likeAnswerResponseDto.getUserId())
+    final User user = userRepository.findUserByEmail(principal.getName())
         .orElseThrow(IllegalArgumentException::new);
-    final Answer answer = answerRepository.findById(likeAnswerResponseDto.getAnswerId())
+    final Answer answer = answerRepository.findById(answerId)
         .orElseThrow(IllegalArgumentException::new);
 
     if (likeAnswerRepository.findByUserManagerAndAnswerManager(user, answer).isPresent()) {
@@ -46,10 +46,16 @@ public class LikeAnswerServiceImpl implements LikeAnswerService {
   }
 
   @Override
-  public LikeAnswerResponseDto delete(LikeAnswerResponseDto likeAnswerResponseDto) {
+  public LikeAnswerResponseDto delete(Long answerId, Principal principal) {
+    final User user = userRepository.findUserByEmail(principal.getName())
+        .orElseThrow(IllegalArgumentException::new);
+    final Answer answer = answerRepository.findById(answerId)
+        .orElseThrow(IllegalArgumentException::new);
+
     final LikeAnswer likeAnswer = likeAnswerRepository
-        .findByUserManager_IdAndAnswerManager_Id(likeAnswerResponseDto.getUserId(),
-            likeAnswerResponseDto.getAnswerId()).orElseThrow(IllegalArgumentException::new);
+        .findByUserManagerAndAnswerManager(user, answer)
+        .orElseThrow(() -> new IllegalArgumentException("해당 답변의 좋아요 기록이 없습니다."));
+
     likeAnswerRepository.delete(likeAnswer);
     return LikeAnswerResponseDto.of(likeAnswer);
   }
