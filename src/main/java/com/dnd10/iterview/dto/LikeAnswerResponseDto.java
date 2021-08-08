@@ -7,20 +7,20 @@ import lombok.Getter;
 
 @Builder
 @Getter
-public class LikeAnswerDto {
+public class LikeAnswerResponseDto {
 
   @NotNull
   private final Long userId;
   @NotNull
   private final Long answerId;
 
-  public LikeAnswerDto(Long userId, Long answerId) {
+  public LikeAnswerResponseDto(Long userId, Long answerId) {
     this.userId = userId;
     this.answerId = answerId;
   }
 
-  public static LikeAnswerDto of(LikeAnswer likeAnswer) {
-    return new LikeAnswerDto(likeAnswer.getUserManager().getId(),
+  public static LikeAnswerResponseDto of(LikeAnswer likeAnswer) {
+    return new LikeAnswerResponseDto(likeAnswer.getUserManager().getId(),
         likeAnswer.getAnswerManager().getId());
   }
 

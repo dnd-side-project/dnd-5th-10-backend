@@ -1,6 +1,7 @@
 package com.dnd10.iterview.service;
 
-import com.dnd10.iterview.dto.AnswerDto;
+import com.dnd10.iterview.dto.AnswerRequestDto;
+import com.dnd10.iterview.dto.AnswerResponseDto;
 import com.dnd10.iterview.entity.Answer;
 import com.dnd10.iterview.entity.Question;
 import com.dnd10.iterview.entity.User;
@@ -24,37 +25,37 @@ public class AnswerServiceImpl implements AnswerService {
   private final UserRepository userRepository;
 
   @Override
-  public Page<AnswerDto> getAllAnswersByQuestion(Long questionId, Pageable pageable) {
+  public Page<AnswerResponseDto> getAllAnswersByQuestion(Long questionId, Pageable pageable) {
 
     final Question question = questionRepository.findById(questionId)
         .orElseThrow(IllegalArgumentException::new);
     final Page<Answer> answers = answerRepository.findAnswersByQuestion(question, pageable);
 
-    return answers.map(AnswerDto::new);
+    return answers.map(AnswerResponseDto::new);
   }
 
   @Override
-  public AnswerDto createAnswer(AnswerDto answerDto) {
-    final Question question = questionRepository.findById(answerDto.getQuestionId())
+  public AnswerResponseDto createAnswer(AnswerRequestDto answerRequestDto) {
+    final Question question = questionRepository.findById(answerRequestDto.getQuestionId())
         .orElseThrow(IllegalArgumentException::new);
-    final User user = userRepository.findUserById(answerDto.getUserId())
+    final User user = userRepository.findUserById(answerRequestDto.getUserId())
         .orElseThrow(IllegalArgumentException::new);
-    answerRepository.save(answerDto.toEntity(user, question));
-    return answerDto;
+    final Answer saved = answerRepository.save(answerRequestDto.toEntity(user, question));
+    return new AnswerResponseDto(saved);
   }
 
   @Override
-  public AnswerDto getAnswer(Long id) {
+  public AnswerResponseDto getAnswer(Long id) {
     final Answer answer = answerRepository.findById(id).orElseThrow(IllegalArgumentException::new);
-    return new AnswerDto(answer);
+    return new AnswerResponseDto(answer);
   }
 
   @Override
-  public Page<AnswerDto> getMyAnswers(Principal principal, Pageable pageable) {
+  public Page<AnswerResponseDto> getMyAnswers(Principal principal, Pageable pageable) {
     final User user = userRepository.findUserByEmail(principal.getName())
         .orElseThrow(IllegalArgumentException::new);
     final Page<Answer> answers = answerRepository.findAllByUser(user, pageable);
 
-    return answers.map(AnswerDto::new);
+    return answers.map(AnswerResponseDto::new);
   }
 }

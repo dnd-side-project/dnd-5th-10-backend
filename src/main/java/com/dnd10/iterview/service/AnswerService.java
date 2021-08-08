@@ -1,17 +1,18 @@
 package com.dnd10.iterview.service;
 
-import com.dnd10.iterview.dto.AnswerDto;
+import com.dnd10.iterview.dto.AnswerRequestDto;
+import com.dnd10.iterview.dto.AnswerResponseDto;
 import java.security.Principal;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface AnswerService {
 
-  Page<AnswerDto> getAllAnswersByQuestion(Long id, Pageable pageable);
+  Page<AnswerResponseDto> getAllAnswersByQuestion(Long id, Pageable pageable);
 
-  AnswerDto createAnswer(AnswerDto answerDto);
+  AnswerResponseDto createAnswer(AnswerRequestDto answerRequestDto);
 
-  AnswerDto getAnswer(Long id);
+  AnswerResponseDto getAnswer(Long id);
 
-  Page<AnswerDto> getMyAnswers(Principal principal, Pageable pageable);
+  Page<AnswerResponseDto> getMyAnswers(Principal principal, Pageable pageable);
 }
