@@ -3,6 +3,7 @@ package com.dnd10.iterview.service;
 import com.dnd10.iterview.dto.QuestionRequestDto;
 import com.dnd10.iterview.dto.QuestionResponseDto;
 import com.dnd10.iterview.dto.QuestionTagResponseDto;
+import com.dnd10.iterview.dto.QuizRequestDto;
 import com.dnd10.iterview.entity.Question;
 import com.dnd10.iterview.entity.QuestionTag;
 import com.dnd10.iterview.entity.Tag;
@@ -14,6 +15,7 @@ import com.dnd10.iterview.repository.UserRepository;
 import java.security.Principal;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -82,8 +84,21 @@ public class QuestionServiceImpl implements QuestionService {
   }
 
   @Override
-  public List<QuestionResponseDto> getQuiz(){
-    return null;
+  public List<QuestionResponseDto> getQuiz(QuizRequestDto quizRequestDto) {
+    //TODO:: tags validation.
+    final List<Question> questions;
+    if (quizRequestDto.getTags().isEmpty()) {
+      questions = questionRepository.findAll();
+    } else {
+      questions = questionRepository.findWithTags(quizRequestDto);
+    }
+    Collections.shuffle(questions);
+    if (quizRequestDto.getSize() > questions.size()) {
+      return questions.stream().map(QuestionResponseDto::of).collect(Collectors.toList());
+    }
+    final List<Question> shuffledQuestions = questions.subList(0, quizRequestDto.getSize());
+
+    return shuffledQuestions.stream().map(QuestionResponseDto::of).collect(Collectors.toList());
   }
 
   private Question generateQuestion(User user, QuestionRequestDto requestDto){

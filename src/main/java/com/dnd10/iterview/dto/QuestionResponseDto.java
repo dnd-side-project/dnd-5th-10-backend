@@ -1,8 +1,9 @@
 package com.dnd10.iterview.dto;
 
-import java.time.LocalDate;
+import com.dnd10.iterview.entity.Question;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -26,4 +27,19 @@ public class QuestionResponseDto {
   private String email;
 
   private List<QuestionTagResponseDto> tagList = new ArrayList<>();
+
+
+  public static QuestionResponseDto of(Question question) {
+    final List<QuestionTagResponseDto> questionTagResponses = question.getQuestionTagList().stream()
+        .map(e -> new QuestionTagResponseDto(e.getTagManager().getName())).collect(
+            Collectors.toList());
+
+    return QuestionResponseDto.builder().id(question.getId())
+        .content(question.getContent())
+        .bookmarkCount(question.getBookmarkCount())
+        .email(question.getUserManager().getEmail())
+        .username(question.getUserManager().getUsername())
+        .tagList(questionTagResponses)
+        .build();
+  }
 }
