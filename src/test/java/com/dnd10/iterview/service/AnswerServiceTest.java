@@ -79,7 +79,6 @@ class AnswerServiceTest {
 
     final AnswerRequestDto answerRequestDto = AnswerRequestDto.builder()
         .content(answer.getContent())
-        .liked(answer.getLiked())
         .questionId(savedQuestion.getId())
         .userId(savedUser.getId())
         .build();

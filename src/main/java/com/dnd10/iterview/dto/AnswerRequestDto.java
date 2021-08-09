@@ -16,13 +16,11 @@ public class AnswerRequestDto {
 
   @Length(min = 20, max = 1000, message = "content length should be 20 ~ 1000")
   private String content;
-  private long liked;
   private long questionId;
   private long userId;
 
   public AnswerRequestDto(Answer answer) {
     this.content = answer.getContent();
-    this.liked = answer.getLiked();
     this.questionId = answer.getQuestion().getId();
     this.userId = answer.getUser().getId();
   }
@@ -30,7 +28,7 @@ public class AnswerRequestDto {
   public Answer toEntity(User user, Question question) {
     return Answer.builder()
         .content(content)
-        .liked(liked)
+        .liked(0L)
         .user(user)
         .question(question)
         .build();
