@@ -1,20 +1,23 @@
 package com.dnd10.iterview.service;
 
+import com.dnd10.iterview.dto.AnswerResponseDto;
 import com.dnd10.iterview.dto.QuestionRequestDto;
 import com.dnd10.iterview.dto.QuestionResponseDto;
 import com.dnd10.iterview.dto.QuestionTagResponseDto;
+import com.dnd10.iterview.entity.Answer;
 import com.dnd10.iterview.entity.Question;
 import com.dnd10.iterview.entity.QuestionTag;
 import com.dnd10.iterview.entity.Tag;
 import com.dnd10.iterview.entity.User;
+import com.dnd10.iterview.repository.AnswerRepository;
 import com.dnd10.iterview.repository.QuestionRepository;
 import com.dnd10.iterview.repository.QuestionTagRepository;
 import com.dnd10.iterview.repository.TagRepository;
 import com.dnd10.iterview.repository.UserRepository;
 import java.security.Principal;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -31,6 +34,7 @@ public class QuestionServiceImpl implements QuestionService {
   private final UserRepository userRepository;
   private final TagRepository tagRepository;
   private final QuestionTagRepository questionTagRepository;
+  private final AnswerRepository answerRepository;
 
   @Override
   public QuestionResponseDto getQuestion(Long questionId){
@@ -120,9 +124,21 @@ public class QuestionServiceImpl implements QuestionService {
     }
   }
 
+  private QuestionResponseDto generateQuestionResponseDtoWithAnswer(Question question){
+    QuestionResponseDto questionResponseDto = new QuestionResponseDto(question);
+    Optional<Answer> answer = answerRepository.findTopByQuestionOrderByLikedDesc(question);
+
+    if(!answer.isEmpty()) {
+      AnswerResponseDto answerDto = new AnswerResponseDto(answer.get());
+      questionResponseDto.setMostLikedAnswer(answerDto);
+    }
+
+    return questionResponseDto;
+  }
+
   private List<QuestionResponseDto> mappingPageToDto(Page<Question> questionPage){
     List<QuestionResponseDto> questionList = questionPage.stream().map(
-        q -> new QuestionResponseDto(q)).collect(Collectors.toList());
+        q -> generateQuestionResponseDtoWithAnswer(q)).collect(Collectors.toList());
 
     return questionList;
   }

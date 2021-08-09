@@ -27,6 +27,8 @@ public class QuestionResponseDto extends BaseTimeEntityDto {
   private String username; // 보안상 유저 이메일, 닉네임만
   private String email;
 
+  private AnswerResponseDto mostLikedAnswer;
+
   private List<QuestionTagResponseDto> tagList = new ArrayList<>();
 
   public QuestionResponseDto(Question question){
@@ -47,5 +49,9 @@ public class QuestionResponseDto extends BaseTimeEntityDto {
     this.username = question.getUserManager().getUsername();
     this.email = question.getUserManager().getEmail();
     this.tagList = dtoList;
+  }
+
+  public void setMostLikedAnswer(AnswerResponseDto answerDto){
+    this.mostLikedAnswer = answerDto;
   }
 }
