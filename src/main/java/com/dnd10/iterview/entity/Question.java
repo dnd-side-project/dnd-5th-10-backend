@@ -24,7 +24,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
-public class Question {
+public class Question extends BaseTimeEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column
@@ -32,10 +32,6 @@ public class Question {
 
   @Column(nullable = false)
   private String content;
-
-  @Column(nullable = false)
-  @DateTimeFormat(pattern = "yyyy-MM-dd")
-  private LocalDate create_date;
 
   @Column(nullable = false)
   private Long bookmarkCount; // _는 jpa에서 property를 찾는 경로 예약어이므로, 카멜케이스로 생성할 것.

@@ -37,8 +37,6 @@ public class Answer extends BaseTimeEntity {
   @ManyToOne(fetch = FetchType.LAZY)
   private User user;
 
-  // answer는 일단 수정 불가능?
-
   public void likeUp(){
     this.liked++;
   }
