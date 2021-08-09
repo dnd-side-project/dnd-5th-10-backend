@@ -5,6 +5,7 @@ import com.dnd10.iterview.entity.QuestionTag;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -53,5 +54,20 @@ public class QuestionResponseDto extends BaseTimeEntityDto {
 
   public void setMostLikedAnswer(AnswerResponseDto answerDto){
     this.mostLikedAnswer = answerDto;
+  }
+
+
+  public static QuestionResponseDto of(Question question) {
+    final List<QuestionTagResponseDto> questionTagResponses = question.getQuestionTagList().stream()
+        .map(e -> new QuestionTagResponseDto(e.getTagManager().getName())).collect(
+            Collectors.toList());
+
+    return QuestionResponseDto.builder().id(question.getId())
+        .content(question.getContent())
+        .bookmarkCount(question.getBookmarkCount())
+        .email(question.getUserManager().getEmail())
+        .username(question.getUserManager().getUsername())
+        .tagList(questionTagResponses)
+        .build();
   }
 }
