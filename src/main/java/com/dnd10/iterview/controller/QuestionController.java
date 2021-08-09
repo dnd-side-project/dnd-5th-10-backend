@@ -62,16 +62,16 @@ public class QuestionController {
 
   @ApiOperation(value = "문제 리스트 검색", notes = "<big>키워드에 따라 문제 리스트</big>를 반환한다.")
   @GetMapping("/search")
-  public ResponseEntity getSearchQuestions(@RequestParam("tags") List<String> tagList, @PageableDefault(size = 5, sort = "bookmarkCount", // todo: 최신순 변경
-      direction = Sort.Direction.DESC) Pageable pageable){
-    List<QuestionResponseDto> questionList = questionService.getSearchQuestions(tagList, pageable);
+  public ResponseEntity getSearchQuestions(@RequestParam("tags") List<String> tagList, @RequestParam("keyword") String keyword,
+      @PageableDefault(size = 5, sort = "bookmarkCount", direction = Sort.Direction.DESC) Pageable pageable){
+    List<QuestionResponseDto> questionList = questionService.getSearchQuestions(tagList, keyword, pageable);
 
     return ResponseEntity.ok(questionList);
   }
 
   @ApiOperation(value = "내가 만든 문제 리스트 검색", notes = "<big>내가 만든 모든 문제</big>를 반환한다.")
   @GetMapping("/mine")
-  public ResponseEntity getMyAllQuestions(Principal principal, @PageableDefault(size = 5, sort = "bookmarkCount", // todo: 최신순 변경
+  public ResponseEntity getMyAllQuestions(Principal principal, @PageableDefault(size = 5, sort = "bookmarkCount",
       direction = Sort.Direction.DESC) Pageable pageable){
     List<QuestionResponseDto> questionList = questionService.getMyAllQuestions(principal, pageable);
 

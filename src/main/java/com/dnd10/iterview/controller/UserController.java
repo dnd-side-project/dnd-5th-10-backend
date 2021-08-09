@@ -35,8 +35,8 @@ public class UserController {
 
   @ApiOperation(value = "회원 프로필 조회", notes = "<big>회원프로필</big>을 반환한다.")
   @GetMapping("profile")
-  public UserDto getUserProfile(Principal principal) {
-    return userService.getUserDetail(principal);
+  public ResponseEntity<UserDto> getUserProfile(Principal principal) {
+    return ResponseEntity.ok(userService.getUserDetail(principal));
   }
 
   @ApiOperation(value = "회원 유저네임 변경", notes = "<big>회원의 이름</big>을 업데이트한다.")

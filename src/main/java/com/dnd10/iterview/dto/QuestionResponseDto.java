@@ -1,5 +1,7 @@
 package com.dnd10.iterview.dto;
 
+import com.dnd10.iterview.entity.Question;
+import com.dnd10.iterview.entity.QuestionTag;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +15,7 @@ import org.hibernate.validator.constraints.Length;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class QuestionResponseDto {
+public class QuestionResponseDto extends BaseTimeEntityDto {
 
   private Long id;
 
@@ -25,5 +27,31 @@ public class QuestionResponseDto {
   private String username; // 보안상 유저 이메일, 닉네임만
   private String email;
 
+  private AnswerResponseDto mostLikedAnswer;
+
   private List<QuestionTagResponseDto> tagList = new ArrayList<>();
+
+  public QuestionResponseDto(Question question){
+    super(question.getCreatedDate(), question.getModifiedDate());
+
+    List<QuestionTagResponseDto> dtoList = new ArrayList<>();
+    for(QuestionTag t : question.getQuestionTagList()){
+      QuestionTagResponseDto dto = QuestionTagResponseDto.builder()
+          .tagTitle(t.getTagManager().getName())
+          .build();
+
+      dtoList.add(dto);
+    }
+
+    this.id = question.getId();
+    this.content = question.getContent();
+    this.bookmarkCount = question.getBookmarkCount();
+    this.username = question.getUserManager().getUsername();
+    this.email = question.getUserManager().getEmail();
+    this.tagList = dtoList;
+  }
+
+  public void setMostLikedAnswer(AnswerResponseDto answerDto){
+    this.mostLikedAnswer = answerDto;
+  }
 }

@@ -29,7 +29,8 @@ public class CustomOAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHa
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException, ServletException {
-
+        //TODO:: github 기준 principal.getAttribute("id") = Integer임
+        //  google은 id가 없음.
         if (logger.isDebugEnabled()) {
             logger.debug(authentication.getPrincipal());
         }

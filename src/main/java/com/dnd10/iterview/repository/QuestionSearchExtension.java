@@ -11,6 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public interface QuestionSearchExtension {
 
-  Page<Question> findWithTags(List<String> tagList, Pageable pageable);
+  Page<Question> findWithTags(List<String> tagList, String keyword, Pageable pageable);
   //List<Question> findWithTagsRandom(List<String> tagList);
 }

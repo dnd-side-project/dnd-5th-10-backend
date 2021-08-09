@@ -1,20 +1,23 @@
 package com.dnd10.iterview.service;
 
+import com.dnd10.iterview.dto.AnswerResponseDto;
 import com.dnd10.iterview.dto.QuestionRequestDto;
 import com.dnd10.iterview.dto.QuestionResponseDto;
 import com.dnd10.iterview.dto.QuestionTagResponseDto;
+import com.dnd10.iterview.entity.Answer;
 import com.dnd10.iterview.entity.Question;
 import com.dnd10.iterview.entity.QuestionTag;
 import com.dnd10.iterview.entity.Tag;
 import com.dnd10.iterview.entity.User;
+import com.dnd10.iterview.repository.AnswerRepository;
 import com.dnd10.iterview.repository.QuestionRepository;
 import com.dnd10.iterview.repository.QuestionTagRepository;
 import com.dnd10.iterview.repository.TagRepository;
 import com.dnd10.iterview.repository.UserRepository;
 import java.security.Principal;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -31,13 +34,14 @@ public class QuestionServiceImpl implements QuestionService {
   private final UserRepository userRepository;
   private final TagRepository tagRepository;
   private final QuestionTagRepository questionTagRepository;
+  private final AnswerRepository answerRepository;
 
   @Override
   public QuestionResponseDto getQuestion(Long questionId){
     Question question = questionRepository.findById(questionId)
         .orElseThrow(() -> new IllegalArgumentException("해당 문제가 존재하지 않습니다."));
 
-    return generateQuestionResponseDto(question);
+    return new QuestionResponseDto(question);
   }
 
   @Override
@@ -48,7 +52,7 @@ public class QuestionServiceImpl implements QuestionService {
     Question question = generateQuestion(user, requestDto);
     Question saved = questionRepository.save(question);
 
-    return generateQuestionResponseDto(saved);
+    return new QuestionResponseDto(saved);
   }
 
   @Override
@@ -59,13 +63,13 @@ public class QuestionServiceImpl implements QuestionService {
   }
 
   @Override
-  public List<QuestionResponseDto> getSearchQuestions(List<String> tagList, Pageable pageable){
+  public List<QuestionResponseDto> getSearchQuestions(List<String> tagList, String keyword, Pageable pageable){
 
-    if(tagList.isEmpty()){ // tag가 없으면 그냥 전부 다.
+    if(tagList.isEmpty() && keyword.isEmpty()){ // tag, keyword 다 없으면 그냥 전부 다.
       return getAllQuestions(pageable);
     }
     else {
-      Page<Question> questionPage = questionRepository.findWithTags(tagList, pageable);
+      Page<Question> questionPage = questionRepository.findWithTags(tagList, keyword, pageable);
 
       return mappingPageToDto(questionPage);
     }
@@ -90,7 +94,6 @@ public class QuestionServiceImpl implements QuestionService {
     Question question = Question.builder()
         .content(requestDto.getContent())
         .bookmarkCount(requestDto.getBookmarkCount())
-        .create_date(LocalDate.now())
         .userManager(user)
         // question entity에 리스트 객체 넣어서 안해도 될줄 알았는데 NPE 오류.. builder 관련 찾아보기
         .questionTagList(new ArrayList<>())
@@ -121,41 +124,21 @@ public class QuestionServiceImpl implements QuestionService {
     }
   }
 
-  private QuestionResponseDto generateQuestionResponseDto(Question question){
+  private QuestionResponseDto generateQuestionResponseDtoWithAnswer(Question question){
+    QuestionResponseDto questionResponseDto = new QuestionResponseDto(question);
+    Optional<Answer> answer = answerRepository.findTopByQuestionOrderByLikedDesc(question);
 
-    List<QuestionTagResponseDto> dtoList = new ArrayList<>();
-    for(QuestionTag t : question.getQuestionTagList()){
-      QuestionTagResponseDto dto = QuestionTagResponseDto.builder()
-          .tagTitle(t.getTagManager().getName())
-          .build();
-
-      dtoList.add(dto);
+    if(!answer.isEmpty()) {
+      AnswerResponseDto answerDto = new AnswerResponseDto(answer.get());
+      questionResponseDto.setMostLikedAnswer(answerDto);
     }
 
-    return QuestionResponseDto.builder()
-        .id(question.getId())
-        .content(question.getContent())
-        //.create_date(question.getCreate_date())
-        .bookmarkCount(question.getBookmarkCount())
-        .email(question.getUserManager().getEmail())
-        .username(question.getUserManager().getUsername())
-        .tagList(dtoList)
-        .build();
-  }
-
-  private List<QuestionResponseDto> generateQuestionResponseDtoList(List<Question> questionList){
-    List<QuestionResponseDto> dtos = new ArrayList<>();
-
-    for(Question q : questionList){
-      dtos.add(generateQuestionResponseDto(q));
-    }
-
-    return dtos;
+    return questionResponseDto;
   }
 
   private List<QuestionResponseDto> mappingPageToDto(Page<Question> questionPage){
     List<QuestionResponseDto> questionList = questionPage.stream().map(
-        q -> generateQuestionResponseDto(q)).collect(Collectors.toList());
+        q -> generateQuestionResponseDtoWithAnswer(q)).collect(Collectors.toList());
 
     return questionList;
   }
