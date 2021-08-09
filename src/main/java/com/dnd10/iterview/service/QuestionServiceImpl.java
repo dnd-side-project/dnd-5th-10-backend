@@ -37,7 +37,7 @@ public class QuestionServiceImpl implements QuestionService {
     Question question = questionRepository.findById(questionId)
         .orElseThrow(() -> new IllegalArgumentException("해당 문제가 존재하지 않습니다."));
 
-    return generateQuestionResponseDto(question);
+    return new QuestionResponseDto(question);
   }
 
   @Override
@@ -48,7 +48,7 @@ public class QuestionServiceImpl implements QuestionService {
     Question question = generateQuestion(user, requestDto);
     Question saved = questionRepository.save(question);
 
-    return generateQuestionResponseDto(saved);
+    return new QuestionResponseDto(saved);
   }
 
   @Override
@@ -59,13 +59,13 @@ public class QuestionServiceImpl implements QuestionService {
   }
 
   @Override
-  public List<QuestionResponseDto> getSearchQuestions(List<String> tagList, Pageable pageable){
+  public List<QuestionResponseDto> getSearchQuestions(List<String> tagList, String keyword, Pageable pageable){
 
-    if(tagList.isEmpty()){ // tag가 없으면 그냥 전부 다.
+    if(tagList.isEmpty() && keyword.isEmpty()){ // tag, keyword 다 없으면 그냥 전부 다.
       return getAllQuestions(pageable);
     }
     else {
-      Page<Question> questionPage = questionRepository.findWithTags(tagList, pageable);
+      Page<Question> questionPage = questionRepository.findWithTags(tagList, keyword, pageable);
 
       return mappingPageToDto(questionPage);
     }
@@ -90,7 +90,6 @@ public class QuestionServiceImpl implements QuestionService {
     Question question = Question.builder()
         .content(requestDto.getContent())
         .bookmarkCount(requestDto.getBookmarkCount())
-        .create_date(LocalDate.now())
         .userManager(user)
         // question entity에 리스트 객체 넣어서 안해도 될줄 알았는데 NPE 오류.. builder 관련 찾아보기
         .questionTagList(new ArrayList<>())
@@ -121,41 +120,9 @@ public class QuestionServiceImpl implements QuestionService {
     }
   }
 
-  private QuestionResponseDto generateQuestionResponseDto(Question question){
-
-    List<QuestionTagResponseDto> dtoList = new ArrayList<>();
-    for(QuestionTag t : question.getQuestionTagList()){
-      QuestionTagResponseDto dto = QuestionTagResponseDto.builder()
-          .tagTitle(t.getTagManager().getName())
-          .build();
-
-      dtoList.add(dto);
-    }
-
-    return QuestionResponseDto.builder()
-        .id(question.getId())
-        .content(question.getContent())
-        //.create_date(question.getCreate_date())
-        .bookmarkCount(question.getBookmarkCount())
-        .email(question.getUserManager().getEmail())
-        .username(question.getUserManager().getUsername())
-        .tagList(dtoList)
-        .build();
-  }
-
-  private List<QuestionResponseDto> generateQuestionResponseDtos(List<Question> questionList){
-    List<QuestionResponseDto> dtos = new ArrayList<>();
-
-    for(Question q : questionList){
-      dtos.add(generateQuestionResponseDto(q));
-    }
-
-    return dtos;
-  }
-
   private List<QuestionResponseDto> mappingPageToDto(Page<Question> questionPage){
     List<QuestionResponseDto> questionList = questionPage.stream().map(
-        q -> generateQuestionResponseDto(q)).collect(Collectors.toList());
+        q -> new QuestionResponseDto(q)).collect(Collectors.toList());
 
     return questionList;
   }

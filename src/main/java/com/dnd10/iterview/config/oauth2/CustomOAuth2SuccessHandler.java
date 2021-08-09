@@ -22,6 +22,7 @@ public class CustomOAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHa
 
     // TODO:: REDIRECT_URL/PATH를 나중에는 local, real 나눠서 구분해야함.
     public static final String REDIRECT_URL = "http://localhost:3000/login";
+    //public static final String REDIRECT_URL = "http://localhost:8080/";
     public static final String PATH = "/";
     private final CookieUtils cookieUtils;
     private final JwtProperties jwtProperties;

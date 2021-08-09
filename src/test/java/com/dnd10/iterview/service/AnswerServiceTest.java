@@ -64,7 +64,7 @@ class AnswerServiceTest {
     final Question question = Question.builder()
         .content("question")
         .bookmarkCount(0L)
-        .create_date(LocalDate.now())
+        //.create_date(LocalDate.now())
         .userManager(savedUser)
         .build();
     final Question savedQuestion = questionRepository.save(question);
@@ -105,7 +105,7 @@ class AnswerServiceTest {
     final Question question = Question.builder()
         .content("question")
         .bookmarkCount(0L)
-        .create_date(LocalDate.now())
+        //.create_date(LocalDate.now())
         .userManager(savedUser)
         .build();
     final Question savedQuestion = questionRepository.save(question);
