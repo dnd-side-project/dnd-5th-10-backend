@@ -30,18 +30,18 @@ public class BookmarkQuestionController {
   private final BookmarkQuestionService bookmarkQuestionService;
 
   @ApiOperation(value = "문제 북마크하기", notes = "<big>문제를 북마크 폴더에 추가</big>한다.")
-  @PostMapping("/{questionId}/{bookmarkId}")
-  public ResponseEntity addBookmarkQuestion(Principal principal, @PathVariable Long questionId, @PathVariable Long bookmarkId){
-    BookmarkQuestionDto dto = bookmarkQuestionService.addBookmarkQuestion(principal, questionId, bookmarkId);
+  @PostMapping("/{questionId}/{bookmarkFolderId}")
+  public ResponseEntity addBookmarkQuestion(Principal principal, @PathVariable Long questionId, @PathVariable Long bookmarkFolderId){
+    BookmarkQuestionDto dto = bookmarkQuestionService.addBookmarkQuestion(principal, questionId, bookmarkFolderId);
 
     return ResponseEntity.ok(dto);
   }
 
   @ApiOperation(value = "북마크 폴더 내 북마크한 문제 조회", notes = "<big>북마크 폴더에서 북마크했던 문제들을 조회</big>한다.")
-  @GetMapping("/{bookmarkId}")
-  public ResponseEntity getBookmarkQuestion(Principal principal, @PathVariable Long bookmarkId,
+  @GetMapping("/{bookmarkFolderId}")
+  public ResponseEntity getBookmarkQuestion(Principal principal, @PathVariable Long bookmarkFolderId,
       @PageableDefault(size = 5, sort = "bookmarkCount", direction = Sort.Direction.DESC) Pageable pageable){
-    List<BookmarkQuestionDto> dtoList = bookmarkQuestionService.getBookmarkQuestion(principal, bookmarkId, pageable);
+    List<BookmarkQuestionDto> dtoList = bookmarkQuestionService.getBookmarkQuestion(principal, bookmarkFolderId, pageable);
 
     return ResponseEntity.ok(dtoList);
   }

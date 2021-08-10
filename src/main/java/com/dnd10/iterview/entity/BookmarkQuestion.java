@@ -31,5 +31,4 @@ public class BookmarkQuestion extends BaseTimeEntity {
   @ManyToOne(fetch = FetchType.LAZY)
   private Question questionManager;
 
-  // todo: 정렬 위해서 북마크 한 시간 저장 column 필요시 추가
 }

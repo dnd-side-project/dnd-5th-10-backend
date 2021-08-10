@@ -19,20 +19,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
-public class BookmarkFolder {
+public class Bookmark extends BaseTimeEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "bookmark_folder_id")
+  @Column(name = "bookmark_id")
   private Long id;
-
-  @Column(nullable = false)
-  private String name;
 
   @ManyToOne(fetch = FetchType.LAZY)
   private User userManager;
 
-  public void changeName(String name){
-    this.name = name;
-  }
-
+  @ManyToOne(fetch = FetchType.LAZY)
+  private Question question;
 }

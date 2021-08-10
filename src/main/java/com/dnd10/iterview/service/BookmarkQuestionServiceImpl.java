@@ -31,12 +31,12 @@ public class BookmarkQuestionServiceImpl implements BookmarkQuestionService {
 
   @Override
   public BookmarkQuestionDto addBookmarkQuestion(Principal principal, Long questionId,
-      Long bookmarkId) {
+      Long bookmarkFolderId) {
 
     User user = userRepository.findUserByEmail(principal.getName())
         .orElseThrow(() -> new IllegalArgumentException("해당 유저가 존재하지 않습니다."));
 
-    BookmarkFolder bookmarkFolder = bookmarkFolderRepository.findById(bookmarkId)
+    BookmarkFolder bookmarkFolder = bookmarkFolderRepository.findById(bookmarkFolderId)
         .orElseThrow(() -> new IllegalArgumentException("해당 북마크가 존재하지 않습니다."));
 
     Question question = questionRepository.findById(questionId)
@@ -59,12 +59,12 @@ public class BookmarkQuestionServiceImpl implements BookmarkQuestionService {
   }
 
   @Override
-  public List<BookmarkQuestionDto> getBookmarkQuestion(Principal principal, Long bookmarkId, Pageable pageable){
+  public List<BookmarkQuestionDto> getBookmarkQuestion(Principal principal, Long bookmarkFolderId, Pageable pageable){
 
     User user = userRepository.findUserByEmail(principal.getName())
         .orElseThrow(() -> new IllegalArgumentException("해당 유저가 존재하지 않습니다."));
 
-    BookmarkFolder bookmarkFolder = bookmarkFolderRepository.findById(bookmarkId)
+    BookmarkFolder bookmarkFolder = bookmarkFolderRepository.findById(bookmarkFolderId)
         .orElseThrow(() -> new IllegalArgumentException("해당 북마크가 존재하지 않습니다."));
 
     if(!bookmarkFolder.getUserManager().getId().equals(user.getId())){
