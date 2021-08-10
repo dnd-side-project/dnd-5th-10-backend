@@ -19,15 +19,16 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
-public class BookmarkQuestion {
+public class BookmarkQuestion extends BaseTimeEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "bookmark_question_id")
   private Long id;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  private Bookmark bookmarkManager;
+  private BookmarkFolder bookmarkFolderManager;
 
   @ManyToOne(fetch = FetchType.LAZY)
   private Question questionManager;
+
 }
