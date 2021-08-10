@@ -1,8 +1,8 @@
 package com.dnd10.iterview.controller;
 
-import com.dnd10.iterview.dto.BookmarkRequestDto;
-import com.dnd10.iterview.dto.BookmarkResponseDto;
-import com.dnd10.iterview.service.BookmarkService;
+import com.dnd10.iterview.dto.BookmarkFolderRequestDto;
+import com.dnd10.iterview.dto.BookmarkFolderResponseDto;
+import com.dnd10.iterview.service.BookmarkFolderService;
 import io.swagger.annotations.ApiOperation;
 import java.security.Principal;
 import java.util.List;
@@ -19,9 +19,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/v1/bookmark")
+@RequestMapping("/api/v1/bookmarkFolder")
 @RequiredArgsConstructor
-public class BookmarkController {
+public class BookmarkFolderController {
   /**
    * 북마크 폴더 생성 v
    * 내 북마크 폴더 조회 v
@@ -29,37 +29,39 @@ public class BookmarkController {
    * 북마크 폴더 삭제 v
    */
 
-  private final BookmarkService bookmarkService;
+  private final BookmarkFolderService bookmarkFolderService;
 
   @ApiOperation(value = "북마크 폴더 생성", notes = "<big>북마크 폴더를 생성</big>한다.")
   @PostMapping("")
-  public ResponseEntity addBookmark(Principal principal, @RequestBody @Valid BookmarkRequestDto bookmarkRequestDto){
-    BookmarkResponseDto dto = bookmarkService.addBookmark(principal, bookmarkRequestDto);
+  public ResponseEntity addBookmarkFolder(Principal principal, @RequestBody @Valid BookmarkFolderRequestDto bookmarkFolderRequestDto){
+    BookmarkFolderResponseDto dto = bookmarkFolderService
+        .addBookmarkFolder(principal, bookmarkFolderRequestDto);
 
     return ResponseEntity.ok(dto);
   }
 
   @ApiOperation(value = "북마크 폴더 이름 변경", notes = "<big>북마크 폴더의 이름을 수정</big>한다.")
-  @PatchMapping("/{bookmarkId}")
-  public ResponseEntity updateBookmark(Principal principal,
-      @RequestBody @Valid BookmarkRequestDto bookmarkRequestDto, @PathVariable Long bookmarkId) {
-    BookmarkResponseDto dto = bookmarkService.updateBookmark(principal, bookmarkId, bookmarkRequestDto);
+  @PatchMapping("/{bookmarkFolderId}")
+  public ResponseEntity updateBookmarkFolder(Principal principal,
+      @RequestBody @Valid BookmarkFolderRequestDto bookmarkFolderRequestDto, @PathVariable Long bookmarkFolderId) {
+    BookmarkFolderResponseDto dto = bookmarkFolderService.updateBookmarkFolder(principal, bookmarkFolderId,
+        bookmarkFolderRequestDto);
 
     return ResponseEntity.ok(dto);
   }
 
   @ApiOperation(value = "북마크 폴더 조회", notes = "<big>나의 북마크 폴더 리스트를 조회</big>한다.")
   @GetMapping("")
-  public ResponseEntity getMyBookmark(Principal principal){ // todo: page 필요?
-    List<BookmarkResponseDto> dtos = bookmarkService.getMyBookmark(principal);
+  public ResponseEntity getMyBookmarkFolder(Principal principal){ // todo: page 필요?
+    List<BookmarkFolderResponseDto> dtos = bookmarkFolderService.getMyBookmarkFolder(principal);
 
     return ResponseEntity.ok(dtos);
   }
 
   @ApiOperation(value = "북마크 폴더 삭제", notes = "<big>북마크 폴더를 삭제</big> 한다.")
-  @DeleteMapping("/{bookmarkId}")
-  public ResponseEntity deleteBookmark(Principal principal, @PathVariable Long bookmarkId){
-    bookmarkService.deleteBookmark(principal, bookmarkId);
+  @DeleteMapping("/{bookmarkFolderId}")
+  public ResponseEntity deleteBookmarkFolder(Principal principal, @PathVariable Long bookmarkFolderId){
+    bookmarkFolderService.deleteBookmarkFolder(principal, bookmarkFolderId);
 
     return ResponseEntity.ok().build();
   }

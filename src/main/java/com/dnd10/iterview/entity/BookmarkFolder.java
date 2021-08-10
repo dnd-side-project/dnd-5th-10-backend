@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
-public class Bookmark {
+public class BookmarkFolder {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "bookmark_id")
