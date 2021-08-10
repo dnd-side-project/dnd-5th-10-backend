@@ -2,16 +2,17 @@ package com.dnd10.iterview.controller;
 
 import com.dnd10.iterview.dto.QuestionRequestDto;
 import com.dnd10.iterview.dto.QuestionResponseDto;
+import com.dnd10.iterview.dto.QuizRequestDto;
 import com.dnd10.iterview.service.QuestionService;
 import io.swagger.annotations.ApiOperation;
 import java.security.Principal;
+import java.util.Collections;
 import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.data.web.SortDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -62,7 +63,7 @@ public class QuestionController {
 
   @ApiOperation(value = "문제 리스트 검색", notes = "<big>키워드에 따라 문제 리스트</big>를 반환한다.")
   @GetMapping("/search")
-  public ResponseEntity getSearchQuestions(@RequestParam("tags") List<String> tagList, @RequestParam("keyword") String keyword,
+  public ResponseEntity getSearchQuestions(@RequestParam(value = "tags", required = false) List<String> tagList, @RequestParam("keyword") String keyword,
       @PageableDefault(size = 5, sort = "bookmarkCount", direction = Sort.Direction.DESC) Pageable pageable){
     List<QuestionResponseDto> questionList = questionService.getSearchQuestions(tagList, keyword, pageable);
 
@@ -80,8 +81,9 @@ public class QuestionController {
 
   @ApiOperation(value = "퀴즈 만들기", notes = "<big>키워드, 개수에 따라 퀴즈</big>를 생성하고 반환한다.")
   @GetMapping("/quiz")
-  public ResponseEntity getQuiz(){
-    List<QuestionResponseDto> questionList = questionService.getQuiz();
+  public ResponseEntity<List<QuestionResponseDto>> getQuiz(@RequestParam(value = "tags", required = false) List<String> tags, @RequestParam(value = "size") int size){
+    final QuizRequestDto quizRequestDto = new QuizRequestDto(tags == null ? Collections.emptyList() : tags, size);
+    List<QuestionResponseDto> questionList = questionService.getQuiz(quizRequestDto);
 
     return ResponseEntity.ok(questionList);
   }

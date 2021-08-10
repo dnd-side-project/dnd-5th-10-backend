@@ -9,6 +9,8 @@ import com.dnd10.iterview.repository.AnswerRepository;
 import com.dnd10.iterview.repository.QuestionRepository;
 import com.dnd10.iterview.repository.UserRepository;
 import java.security.Principal;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -57,5 +59,20 @@ public class AnswerServiceImpl implements AnswerService {
     final Page<Answer> answers = answerRepository.findAllByUser(user, pageable);
 
     return answers.map(AnswerResponseDto::new);
+  }
+
+  @Override
+  public List<AnswerResponseDto> saveAnswers(Principal principal, List<AnswerRequestDto> answers) {
+    final User user = userRepository.findUserByEmail(principal.getName())
+        .orElseThrow(IllegalArgumentException::new);
+    final List<Answer> savedAnswers = answerRepository
+        .saveAll(answers.stream().map(e -> getAnswer(user, e)).collect(Collectors.toList()));
+    return savedAnswers.stream().map(AnswerResponseDto::new).collect(Collectors.toList());
+  }
+
+  private Answer getAnswer(User user, AnswerRequestDto e) {
+    final Question question = questionRepository.findById(e.getQuestionId())
+        .orElseThrow(() -> new IllegalArgumentException("없는 문제가 있습니다."));
+    return e.toEntity(user, question);
   }
 }

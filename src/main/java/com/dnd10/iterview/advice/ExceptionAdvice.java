@@ -49,15 +49,19 @@ public class ExceptionAdvice {
   @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
   public ErrorMessage oAuth2AuthenticationException(HttpServletRequest request, OAuth2AuthenticationException e) {
     log.error("{}",request.getRequestURL());
-    log.error("{} :: oauth2 login에서 문제가 발생했습니다.",e.getMessage());
     return getErrorMessage(e.getMessage(), "유효하지 않은 값이 전달되었습니다.");
   }
   @ExceptionHandler(PropertyReferenceException.class)
   @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
   public ErrorMessage propertyReferenceException(HttpServletRequest request, PropertyReferenceException e) {
     log.error("{}",request.getRequestURL());
-    log.error("{} :: oauth2 login에서 문제가 발생했습니다.",e.getMessage());
     return getErrorMessage(e.getMessage(), "유효하지 않은 값이 전달되었습니다.");
+  }
+  @ExceptionHandler(IndexOutOfBoundsException.class)
+  @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
+  public ErrorMessage indexOutOfBoundsException(HttpServletRequest request, IndexOutOfBoundsException e) {
+    log.error("{}",request.getRequestURL());
+    return getErrorMessage(e.getMessage(), "범위를 초과한 값이 전달되었습니다.");
   }
 
   private ErrorMessage getErrorMessage(String message, String description) {
