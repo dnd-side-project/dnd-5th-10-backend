@@ -37,10 +37,10 @@ public class AnswerServiceImpl implements AnswerService {
   }
 
   @Override
-  public AnswerResponseDto createAnswer(AnswerRequestDto answerRequestDto) {
+  public AnswerResponseDto createAnswer(AnswerRequestDto answerRequestDto, Principal principal) {
     final Question question = questionRepository.findById(answerRequestDto.getQuestionId())
         .orElseThrow(IllegalArgumentException::new);
-    final User user = userRepository.findUserById(answerRequestDto.getUserId())
+    final User user = userRepository.findUserByEmail(principal.getName())
         .orElseThrow(IllegalArgumentException::new);
     final Answer saved = answerRepository.save(answerRequestDto.toEntity(user, question));
     return new AnswerResponseDto(saved);

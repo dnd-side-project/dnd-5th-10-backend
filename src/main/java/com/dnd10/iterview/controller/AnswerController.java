@@ -34,8 +34,8 @@ public class AnswerController {
   }
 
   @PostMapping
-  public AnswerResponseDto submitAnswer(@RequestBody @Valid AnswerRequestDto answerRequestDto) {
-    return answerService.createAnswer(answerRequestDto);
+  public AnswerResponseDto submitAnswer(@RequestBody @Valid AnswerRequestDto answerRequestDto, Principal principal) {
+    return answerService.createAnswer(answerRequestDto, principal);
   }
 
   @ApiOperation(value = "문제의 답변 조회", notes = "<big>한 문제의 모든 답변</big>을 조회한다.")

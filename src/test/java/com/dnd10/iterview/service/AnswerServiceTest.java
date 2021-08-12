@@ -11,7 +11,8 @@ import com.dnd10.iterview.repository.AnswerRepository;
 import com.dnd10.iterview.repository.LikeAnswerRepository;
 import com.dnd10.iterview.repository.QuestionRepository;
 import com.dnd10.iterview.repository.UserRepository;
-import java.time.LocalDate;
+import com.sun.security.auth.UserPrincipal;
+import java.security.Principal;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -80,9 +81,9 @@ class AnswerServiceTest {
     final AnswerRequestDto answerRequestDto = AnswerRequestDto.builder()
         .content(answer.getContent())
         .questionId(savedQuestion.getId())
-        .userId(savedUser.getId())
         .build();
-    final AnswerResponseDto answerSaved = answerService.createAnswer(answerRequestDto);
+    Principal principal = new UserPrincipal(savedUser.getEmail());
+    final AnswerResponseDto answerSaved = answerService.createAnswer(answerRequestDto, principal);
 
     final Page<AnswerResponseDto> allAnswers = answerService.getAllAnswersByQuestion(savedQuestion.getId(), Pageable.ofSize(2));
     Assertions.assertThat(allAnswers.getContent().get(0).getContent()).isEqualTo(answerSaved.getContent());

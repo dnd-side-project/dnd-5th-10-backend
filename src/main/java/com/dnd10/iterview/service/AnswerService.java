@@ -11,7 +11,7 @@ public interface AnswerService {
 
   Page<AnswerResponseDto> getAllAnswersByQuestion(Long id, Pageable pageable);
 
-  AnswerResponseDto createAnswer(AnswerRequestDto answerRequestDto);
+  AnswerResponseDto createAnswer(AnswerRequestDto answerRequestDto, Principal principal);
 
   AnswerResponseDto getAnswer(Long id);
 
