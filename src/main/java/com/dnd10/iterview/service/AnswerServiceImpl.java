@@ -60,7 +60,7 @@ public class AnswerServiceImpl implements AnswerService {
         .orElseThrow(IllegalArgumentException::new);
     final Page<Answer> answers = answerRepository.findAllByUser(user, pageable);
 
-    return answers.map(e -> new MyAnswerDto(e, QuestionResponseDto.of(e.getQuestion())));
+    return answers.map(e -> new MyAnswerDto(e, new QuestionResponseDto(e.getQuestion())));
   }
 
   @Override
