@@ -66,9 +66,17 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     }
 
     private User registerNewUser(OAuth2UserRequest oAuth2UserRequest, OAuth2UserInfo oAuth2UserInfo) {
+        Object imageUrl;
+        if (oAuth2UserInfo instanceof GithubOAuth2Info) {
+            imageUrl = oAuth2UserInfo.getAttributes().get("avatar_url");
+        } else {
+            imageUrl = oAuth2UserInfo.getAttributes().get("picture");
+        }
+
         User user = User.builder()
             .email(oAuth2UserInfo.getEmail())
             .username(oAuth2UserInfo.getName())
+            .imageUrl(String.valueOf(imageUrl))
             .provider(AuthProvider.valueOf(oAuth2UserRequest.getClientRegistration().getRegistrationId()))
             .providerId(oAuth2UserInfo.getId())
             .build();
