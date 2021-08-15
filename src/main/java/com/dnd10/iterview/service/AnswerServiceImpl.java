@@ -2,6 +2,8 @@ package com.dnd10.iterview.service;
 
 import com.dnd10.iterview.dto.AnswerRequestDto;
 import com.dnd10.iterview.dto.AnswerResponseDto;
+import com.dnd10.iterview.dto.MyAnswerDto;
+import com.dnd10.iterview.dto.QuestionResponseDto;
 import com.dnd10.iterview.entity.Answer;
 import com.dnd10.iterview.entity.Question;
 import com.dnd10.iterview.entity.User;
@@ -53,12 +55,12 @@ public class AnswerServiceImpl implements AnswerService {
   }
 
   @Override
-  public Page<AnswerResponseDto> getMyAnswers(Principal principal, Pageable pageable) {
+  public Page<MyAnswerDto> getMyAnswers(Principal principal, Pageable pageable) {
     final User user = userRepository.findUserByEmail(principal.getName())
         .orElseThrow(IllegalArgumentException::new);
     final Page<Answer> answers = answerRepository.findAllByUser(user, pageable);
 
-    return answers.map(AnswerResponseDto::new);
+    return answers.map(e -> new MyAnswerDto(e, QuestionResponseDto.of(e.getQuestion())));
   }
 
   @Override
