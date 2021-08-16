@@ -79,7 +79,7 @@ public class AnswerServiceImpl implements AnswerService {
     final Question question = questionRepository.findById(questionId)
         .orElseThrow(IllegalArgumentException::new);
 
-    final Answer answer = answerRepository.findByQuestionAndUser(question, user)
+    final Answer answer = answerRepository.findTopByQuestionAndUserOrderByCreatedDateDesc(question, user)
         .orElseThrow(IllegalArgumentException::new);
 
     return new AnswerResponseDto(answer);

@@ -21,5 +21,5 @@ public interface AnswerRepository extends JpaRepository<Answer,Long> {
 
   Optional<Answer> findTopByQuestionOrderByLikedDesc(Question question);
 
-  Optional<Answer> findByQuestionAndUser(Question question, User user);
+  Optional<Answer> findTopByQuestionAndUserOrderByCreatedDateDesc(Question question, User user);
 }
