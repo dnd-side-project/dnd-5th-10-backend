@@ -20,4 +20,6 @@ public interface AnswerRepository extends JpaRepository<Answer,Long> {
   Page<Answer> findAllByUser(User user, Pageable pageable);
 
   Optional<Answer> findTopByQuestionOrderByLikedDesc(Question question);
+
+  Optional<Answer> findByQuestionAndUser(Question question, User user);
 }
