@@ -34,7 +34,7 @@ jobs:
       with:
         aws-access-key-id: $
         aws-secret-access-key: $
-        aws-region: $
+        aws-region: ap-northeast-2
 
     - name: Upload to S3
       run: aws s3 cp --region ap-northeast-2 ./$GITHUB_SHA.zip s3://isntyet-deploy/$PROJECT_NAME/$GITHUB_SHA.zip
