@@ -72,6 +72,19 @@ public class AnswerServiceImpl implements AnswerService {
     return savedAnswers.stream().map(AnswerResponseDto::new).collect(Collectors.toList());
   }
 
+  @Override
+  public AnswerResponseDto getMyAnswerByQuestion(Principal principal, Long questionId){
+    final User user = userRepository.findUserByEmail(principal.getName())
+        .orElseThrow(IllegalArgumentException::new);
+    final Question question = questionRepository.findById(questionId)
+        .orElseThrow(IllegalArgumentException::new);
+
+    final Answer answer = answerRepository.findByQuestionAndUser(question, user)
+        .orElseThrow(IllegalArgumentException::new);
+
+    return new AnswerResponseDto(answer);
+  }
+
   private Answer getAnswer(User user, AnswerRequestDto e) {
     final Question question = questionRepository.findById(e.getQuestionId())
         .orElseThrow(() -> new IllegalArgumentException("없는 문제가 있습니다."));

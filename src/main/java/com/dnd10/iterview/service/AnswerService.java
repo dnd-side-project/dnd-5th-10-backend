@@ -19,4 +19,6 @@ public interface AnswerService {
   Page<MyAnswerDto> getMyAnswers(Principal principal, Pageable pageable);
 
   List<AnswerResponseDto> saveAnswers(Principal principal, List<AnswerRequestDto> answers);
+
+  AnswerResponseDto getMyAnswerByQuestion(Principal principal, Long id);
 }

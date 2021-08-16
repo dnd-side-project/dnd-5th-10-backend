@@ -72,4 +72,10 @@ public class AnswerController {
 
     return ResponseEntity.ok(answerService.saveAnswers(principal, answers));
   }
+
+  @ApiOperation(value = "한 문제에 대한 내 답변 조회")
+  @GetMapping("{questionId}/mine")
+  public ResponseEntity getMyAnswerByQuestion(Principal principal, @PathVariable Long questionId){
+    return ResponseEntity.ok(answerService.getMyAnswerByQuestion(principal, questionId));
+  }
 }
