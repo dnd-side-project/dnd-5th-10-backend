@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-REPOSITORY=~/app/iterview
+REPOSITORY= /home/ec2-user/app/iterview
 cd $REPOSITORY
 
 APP_NAME=iterview
