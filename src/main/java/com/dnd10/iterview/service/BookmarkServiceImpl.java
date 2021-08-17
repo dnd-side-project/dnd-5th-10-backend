@@ -40,6 +40,10 @@ public class BookmarkServiceImpl implements BookmarkService {
     Question question = questionRepository.findById(questionId)
         .orElseThrow(() -> new IllegalArgumentException("해당 문제가 존재하지 않습니다."));
 
+    if(bookmarkRepository.existsByUserManagerAndQuestion(user, question)){
+      throw new IllegalArgumentException("이미 북마크 한 문제입니다.");
+    }
+
     Bookmark bookmark = Bookmark.builder()
         .userManager(user)
         .question(question)
