@@ -36,6 +36,8 @@ public class LikeAnswerServiceImpl implements LikeAnswerService {
       throw new IllegalArgumentException("이미 좋아요한 답변입니다.");
     }
 
+    answer.likeUp();
+
     final LikeAnswer likeAnswer = LikeAnswer.builder()
         .userManager(user)
         .answerManager(answer)
@@ -51,6 +53,8 @@ public class LikeAnswerServiceImpl implements LikeAnswerService {
         .orElseThrow(IllegalArgumentException::new);
     final Answer answer = answerRepository.findById(answerId)
         .orElseThrow(IllegalArgumentException::new);
+
+    answer.likeDown();
 
     final LikeAnswer likeAnswer = likeAnswerRepository
         .findByUserManagerAndAnswerManager(user, answer)
