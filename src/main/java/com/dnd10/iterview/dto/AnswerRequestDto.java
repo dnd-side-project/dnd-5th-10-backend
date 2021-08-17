@@ -17,12 +17,10 @@ public class AnswerRequestDto {
   @Length(min = 20, max = 1000, message = "content length should be 20 ~ 1000")
   private String content;
   private long questionId;
-  private long userId;
 
   public AnswerRequestDto(Answer answer) {
     this.content = answer.getContent();
     this.questionId = answer.getQuestion().getId();
-    this.userId = answer.getUser().getId();
   }
 
   public Answer toEntity(User user, Question question) {

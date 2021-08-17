@@ -32,6 +32,9 @@ public class User {
     @Column(unique = true, nullable = false)
     private String username; // nickname
 
+    @Column
+    private String imageUrl;
+
     @NotNull
     @Enumerated(EnumType.STRING)
     private AuthProvider provider;

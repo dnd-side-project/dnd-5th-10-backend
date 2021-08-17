@@ -2,6 +2,8 @@ package com.dnd10.iterview.service;
 
 import com.dnd10.iterview.dto.AnswerRequestDto;
 import com.dnd10.iterview.dto.AnswerResponseDto;
+import com.dnd10.iterview.dto.MyAnswerDto;
+import com.dnd10.iterview.dto.QuestionResponseDto;
 import com.dnd10.iterview.entity.Answer;
 import com.dnd10.iterview.entity.Question;
 import com.dnd10.iterview.entity.User;
@@ -37,10 +39,10 @@ public class AnswerServiceImpl implements AnswerService {
   }
 
   @Override
-  public AnswerResponseDto createAnswer(AnswerRequestDto answerRequestDto) {
+  public AnswerResponseDto createAnswer(AnswerRequestDto answerRequestDto, Principal principal) {
     final Question question = questionRepository.findById(answerRequestDto.getQuestionId())
         .orElseThrow(IllegalArgumentException::new);
-    final User user = userRepository.findUserById(answerRequestDto.getUserId())
+    final User user = userRepository.findUserByEmail(principal.getName())
         .orElseThrow(IllegalArgumentException::new);
     final Answer saved = answerRepository.save(answerRequestDto.toEntity(user, question));
     return new AnswerResponseDto(saved);
@@ -53,12 +55,12 @@ public class AnswerServiceImpl implements AnswerService {
   }
 
   @Override
-  public Page<AnswerResponseDto> getMyAnswers(Principal principal, Pageable pageable) {
+  public Page<MyAnswerDto> getMyAnswers(Principal principal, Pageable pageable) {
     final User user = userRepository.findUserByEmail(principal.getName())
         .orElseThrow(IllegalArgumentException::new);
     final Page<Answer> answers = answerRepository.findAllByUser(user, pageable);
 
-    return answers.map(AnswerResponseDto::new);
+    return answers.map(e -> new MyAnswerDto(e, new QuestionResponseDto(e.getQuestion())));
   }
 
   @Override
@@ -68,6 +70,19 @@ public class AnswerServiceImpl implements AnswerService {
     final List<Answer> savedAnswers = answerRepository
         .saveAll(answers.stream().map(e -> getAnswer(user, e)).collect(Collectors.toList()));
     return savedAnswers.stream().map(AnswerResponseDto::new).collect(Collectors.toList());
+  }
+
+  @Override
+  public AnswerResponseDto getMyAnswerByQuestion(Principal principal, Long questionId){
+    final User user = userRepository.findUserByEmail(principal.getName())
+        .orElseThrow(IllegalArgumentException::new);
+    final Question question = questionRepository.findById(questionId)
+        .orElseThrow(IllegalArgumentException::new);
+
+    final Answer answer = answerRepository.findTopByQuestionAndUserOrderByCreatedDateDesc(question, user)
+        .orElseThrow(IllegalArgumentException::new);
+
+    return new AnswerResponseDto(answer);
   }
 
   private Answer getAnswer(User user, AnswerRequestDto e) {

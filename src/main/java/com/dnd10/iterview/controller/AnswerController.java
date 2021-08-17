@@ -2,6 +2,7 @@ package com.dnd10.iterview.controller;
 
 import com.dnd10.iterview.dto.AnswerRequestDto;
 import com.dnd10.iterview.dto.AnswerResponseDto;
+import com.dnd10.iterview.dto.MyAnswerDto;
 import com.dnd10.iterview.service.AnswerService;
 import io.swagger.annotations.ApiOperation;
 import java.security.Principal;
@@ -34,8 +35,8 @@ public class AnswerController {
   }
 
   @PostMapping
-  public AnswerResponseDto submitAnswer(@RequestBody @Valid AnswerRequestDto answerRequestDto) {
-    return answerService.createAnswer(answerRequestDto);
+  public AnswerResponseDto submitAnswer(@RequestBody @Valid AnswerRequestDto answerRequestDto, Principal principal) {
+    return answerService.createAnswer(answerRequestDto, principal);
   }
 
   @ApiOperation(value = "문제의 답변 조회", notes = "<big>한 문제의 모든 답변</big>을 조회한다.")
@@ -56,7 +57,7 @@ public class AnswerController {
 
   @ApiOperation(value = "내가 한 답변을 조회", notes = "<big>내가 한 답변</big>을 조회한다.")
   @GetMapping("/mine")
-  public ResponseEntity<Page<AnswerResponseDto>> getMyAnswers(Principal principal,
+  public ResponseEntity<Page<MyAnswerDto>> getMyAnswers(Principal principal,
       @PageableDefault(size = 5, sort = "liked",
           direction = Sort.Direction.DESC) Pageable pageable) {
 
@@ -70,5 +71,11 @@ public class AnswerController {
       @RequestBody @NotEmpty(message = "답변 리스트 길이가 0이어선 안됩니다.") List<AnswerRequestDto> answers) {
 
     return ResponseEntity.ok(answerService.saveAnswers(principal, answers));
+  }
+
+  @ApiOperation(value = "한 문제에 대한 내 답변 조회")
+  @GetMapping("{questionId}/mine")
+  public ResponseEntity getMyAnswerByQuestion(Principal principal, @PathVariable Long questionId){
+    return ResponseEntity.ok(answerService.getMyAnswerByQuestion(principal, questionId));
   }
 }
