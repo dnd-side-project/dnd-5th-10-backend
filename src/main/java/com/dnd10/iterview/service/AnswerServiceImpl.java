@@ -90,4 +90,11 @@ public class AnswerServiceImpl implements AnswerService {
         .orElseThrow(() -> new IllegalArgumentException("없는 문제가 있습니다."));
     return e.toEntity(user, question);
   }
+
+  @Override
+  public List<AnswerResponseDto> getHitAnswers() {
+    final List<Answer> top3AnswersOrderByLikedDesc = answerRepository
+        .findTop3AnswersByOrderByLikedDesc();
+    return top3AnswersOrderByLikedDesc.stream().map(AnswerResponseDto::new).collect(Collectors.toList());
+  }
 }

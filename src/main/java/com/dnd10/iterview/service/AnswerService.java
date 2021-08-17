@@ -21,4 +21,6 @@ public interface AnswerService {
   List<AnswerResponseDto> saveAnswers(Principal principal, List<AnswerRequestDto> answers);
 
   AnswerResponseDto getMyAnswerByQuestion(Principal principal, Long id);
+
+  List<AnswerResponseDto> getHitAnswers();
 }

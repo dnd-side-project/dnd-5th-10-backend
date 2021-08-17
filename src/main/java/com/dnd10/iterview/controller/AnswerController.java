@@ -78,4 +78,11 @@ public class AnswerController {
   public ResponseEntity getMyAnswerByQuestion(Principal principal, @PathVariable Long questionId){
     return ResponseEntity.ok(answerService.getMyAnswerByQuestion(principal, questionId));
   }
+
+
+  @ApiOperation(value = "인기 답변 조회")
+  @GetMapping("/hits")
+  public ResponseEntity<List<AnswerResponseDto>> hitAnswers() {
+    return ResponseEntity.ok(answerService.getHitAnswers());
+  }
 }

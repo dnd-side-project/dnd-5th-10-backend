@@ -3,6 +3,7 @@ package com.dnd10.iterview.repository;
 import com.dnd10.iterview.entity.Answer;
 import com.dnd10.iterview.entity.Question;
 import com.dnd10.iterview.entity.User;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,4 +23,6 @@ public interface AnswerRepository extends JpaRepository<Answer,Long> {
   Optional<Answer> findTopByQuestionOrderByLikedDesc(Question question);
 
   Optional<Answer> findTopByQuestionAndUserOrderByCreatedDateDesc(Question question, User user);
+
+  List<Answer> findTop3AnswersByOrderByLikedDesc();
 }
