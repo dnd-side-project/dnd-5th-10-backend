@@ -2,6 +2,8 @@ package com.dnd10.iterview.service;
 
 import com.dnd10.iterview.dto.AnswerResponseDto;
 import com.dnd10.iterview.dto.LikeAnswerResponseDto;
+import com.dnd10.iterview.dto.MyAnswerDto;
+import com.dnd10.iterview.dto.QuestionResponseDto;
 import com.dnd10.iterview.entity.Answer;
 import com.dnd10.iterview.entity.LikeAnswer;
 import com.dnd10.iterview.entity.User;
@@ -65,11 +67,12 @@ public class LikeAnswerServiceImpl implements LikeAnswerService {
   }
 
   @Override
-  public Page<AnswerResponseDto> getAllAnswerLiked(Principal principal, Pageable pageable) {
+  public Page<MyAnswerDto> getAllAnswerLiked(Principal principal, Pageable pageable) {
     final User user = userRepository.findUserByEmail(principal.getName())
         .orElseThrow(() -> new IllegalArgumentException("토큰 사용자가 가입되어있지 않습니다."));
     final Page<LikeAnswer> likeAnswerPage = likeAnswerRepository
         .findAllByUserManager_Id(user.getId(), pageable);
-    return likeAnswerPage.map(likeAnswer -> new AnswerResponseDto(likeAnswer.getAnswerManager()));
+    return likeAnswerPage.map(likeAnswer
+        -> new MyAnswerDto(likeAnswer.getAnswerManager(), new QuestionResponseDto(likeAnswer.getAnswerManager().getQuestion())));
   }
 }
