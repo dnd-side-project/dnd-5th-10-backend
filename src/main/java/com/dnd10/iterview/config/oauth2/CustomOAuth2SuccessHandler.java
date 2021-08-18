@@ -39,12 +39,23 @@ public class CustomOAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHa
 
         DefaultOAuth2User principal = (DefaultOAuth2User) authentication.getPrincipal();
 
-        String jwtToken = JWT.create()
-                .withSubject(principal.getAttribute("sub"))
+        String jwtToken;
+        if(principal.getAttributes().containsKey("id")){
+            jwtToken = JWT.create()
+                .withSubject(Integer.toString(principal.getAttribute("id")))
                 .withExpiresAt(new Date(System.currentTimeMillis()+ jwtProperties.getExpirationTime()))
-                .withClaim("id", (Long) principal.getAttribute("id"))
+                //.withClaim("id", (Long) principal.getAttribute("id")) // todo: 필요한가? 없어도 동작 잘되는 것 확인
                 .withClaim("email", (String) principal.getAttribute("email"))
                 .sign(Algorithm.HMAC256(jwtProperties.getSecret()));
+        } // todo: github 임시. principal의 client~ 로 github, google 있는거 이용하려 했는데, 접근 불가능.
+        else {
+            jwtToken = JWT.create()
+                .withSubject(principal.getAttribute("sub"))
+                .withExpiresAt(
+                    new Date(System.currentTimeMillis() + jwtProperties.getExpirationTime()))
+                .withClaim("email", (String) principal.getAttribute("email"))
+                .sign(Algorithm.HMAC256(jwtProperties.getSecret()));
+        }
         response.addHeader(JwtProperties.HEADER_STRING, JwtProperties.TOKEN_PREFIX + jwtToken);
 
         final Cookie cookie = cookieUtils
