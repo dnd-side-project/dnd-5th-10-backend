@@ -2,6 +2,7 @@ package com.dnd10.iterview.controller;
 
 import com.dnd10.iterview.dto.AnswerResponseDto;
 import com.dnd10.iterview.dto.LikeAnswerResponseDto;
+import com.dnd10.iterview.dto.MyAnswerDto;
 import com.dnd10.iterview.service.LikeAnswerService;
 import io.swagger.annotations.ApiOperation;
 import java.security.Principal;
@@ -36,7 +37,7 @@ public class LikeAnswerController {
 
   @ApiOperation(value = "내가 좋아한 답변을 조회", notes = "<big>내가 좋아요한 답변</big>을 조회한다.")
   @GetMapping("/mine")
-  public ResponseEntity<Page<AnswerResponseDto>> getAllAnswersLiked(final Pageable pageable,
+  public ResponseEntity<Page<MyAnswerDto>> getAllAnswersLiked(final Pageable pageable,
       Principal principal) {
     return ResponseEntity.ok(likeAnswerService.getAllAnswerLiked(principal,pageable));
   }
