@@ -2,6 +2,7 @@ package com.dnd10.iterview.controller;
 
 import com.dnd10.iterview.dto.AnswerRequestDto;
 import com.dnd10.iterview.dto.AnswerResponseDto;
+import com.dnd10.iterview.dto.HitAnswerResponseDto;
 import com.dnd10.iterview.dto.MyAnswerDto;
 import com.dnd10.iterview.service.AnswerService;
 import io.swagger.annotations.ApiOperation;
@@ -82,7 +83,7 @@ public class AnswerController {
 
   @ApiOperation(value = "인기 답변 조회")
   @GetMapping("/hits")
-  public ResponseEntity<List<AnswerResponseDto>> hitAnswers() {
+  public ResponseEntity<List<HitAnswerResponseDto>> hitAnswers() {
     return ResponseEntity.ok(answerService.getHitAnswers());
   }
 }

@@ -2,6 +2,7 @@ package com.dnd10.iterview.service;
 
 import com.dnd10.iterview.dto.AnswerRequestDto;
 import com.dnd10.iterview.dto.AnswerResponseDto;
+import com.dnd10.iterview.dto.HitAnswerResponseDto;
 import com.dnd10.iterview.dto.MyAnswerDto;
 import java.security.Principal;
 import java.util.List;
@@ -22,5 +23,5 @@ public interface AnswerService {
 
   AnswerResponseDto getMyAnswerByQuestion(Principal principal, Long id);
 
-  List<AnswerResponseDto> getHitAnswers();
+  List<HitAnswerResponseDto> getHitAnswers();
 }

@@ -2,6 +2,7 @@ package com.dnd10.iterview.service;
 
 import com.dnd10.iterview.dto.AnswerRequestDto;
 import com.dnd10.iterview.dto.AnswerResponseDto;
+import com.dnd10.iterview.dto.HitAnswerResponseDto;
 import com.dnd10.iterview.dto.MyAnswerDto;
 import com.dnd10.iterview.dto.QuestionResponseDto;
 import com.dnd10.iterview.entity.Answer;
@@ -92,9 +93,9 @@ public class AnswerServiceImpl implements AnswerService {
   }
 
   @Override
-  public List<AnswerResponseDto> getHitAnswers() {
+  public List<HitAnswerResponseDto> getHitAnswers() {
     final List<Answer> top3AnswersOrderByLikedDesc = answerRepository
         .findTop3AnswersByOrderByLikedDesc();
-    return top3AnswersOrderByLikedDesc.stream().map(AnswerResponseDto::new).collect(Collectors.toList());
+    return top3AnswersOrderByLikedDesc.stream().map(HitAnswerResponseDto::new).collect(Collectors.toList());
   }
 }
