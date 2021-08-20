@@ -37,9 +37,6 @@ public class CustomOAuth2FailureHandler extends SimpleUrlAuthenticationFailureHa
     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
     response.setContentType("application/json;charset=UTF-8");
 
-    response.getWriter().write(objectMapper.writeValueAsString(data));
-    response.getWriter().flush();
-
     getRedirectStrategy().sendRedirect(request, response, oAuthProperties.getRedirectUrl() + REDIRECT_PATH);
   }
 }
