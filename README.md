@@ -1,7 +1,16 @@
-# dnd-5th-10-backend   
+# IT'erview
+### dnd-5th-10-backend
 
 ## 프로젝트 소개
-맞춤형 면접 문제 공유 서비스
+**개발자가 되기를 꿈꾸는 취업준비생, 이직러를 위한  
+IT 면접 지식 공유 플랫폼**
+![mainPage](image/main.png)
+
+## 아키텍쳐
+![architecture](image/architecture.png)
+
+## 사용한 기술 정리
+![dev description](image/description.png)
 
 ## 개발 양식
 ### git branch 
