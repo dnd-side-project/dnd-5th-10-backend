@@ -1,12 +1,6 @@
 package com.dnd10.iterview.config.oauth2;
 
-import com.dnd10.iterview.config.jwt.JwtProperties;
-import com.dnd10.iterview.util.CookieUtils;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -23,19 +17,6 @@ public class CustomOAuth2FailureHandler extends SimpleUrlAuthenticationFailureHa
   @Override
   public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception)
       throws IOException, ServletException {
-
-    ObjectMapper objectMapper = new ObjectMapper();
-
-    response.setStatus(HttpStatus.UNAUTHORIZED.value());
-    Map<String, Object> data = new HashMap<>();
-    data.put(
-        "timestamp",
-        Calendar.getInstance().getTime());
-    data.put(
-        "exception",
-        exception.getMessage());
-
-    response.getOutputStream()
-        .println(objectMapper.writeValueAsString(data));
+    response.sendError(HttpStatus.UNAUTHORIZED.value(), exception.getMessage());
   }
 }
