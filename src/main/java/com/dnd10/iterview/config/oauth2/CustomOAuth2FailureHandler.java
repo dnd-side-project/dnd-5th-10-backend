@@ -33,7 +33,10 @@ public class CustomOAuth2FailureHandler extends SimpleUrlAuthenticationFailureHa
 
     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
     response.setContentType("application/json;charset=UTF-8");
+
     response.getWriter().write(objectMapper.writeValueAsString(data));
     response.getWriter().flush();
+
+    response.sendRedirect("http://ec2-3-37-137-255.ap-northeast-2.compute.amazonaws.com/");
   }
 }
