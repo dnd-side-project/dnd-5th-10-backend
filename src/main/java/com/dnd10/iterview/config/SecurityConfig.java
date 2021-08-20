@@ -4,6 +4,7 @@ package com.dnd10.iterview.config;
 
 import com.dnd10.iterview.config.jwt.JwtAuthorizationFilter;
 import com.dnd10.iterview.config.jwt.JwtProperties;
+import com.dnd10.iterview.config.oauth2.CustomOAuth2FailureHandler;
 import com.dnd10.iterview.config.oauth2.CustomOAuth2SuccessHandler;
 import com.dnd10.iterview.config.oauth2.CustomOAuth2UserService;
 import com.dnd10.iterview.repository.UserRepository;
@@ -11,11 +12,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -27,6 +30,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final CustomOAuth2SuccessHandler customOAuth2SuccessHandler;
+    private final CustomOAuth2FailureHandler customOAuth2FailureHandler;
     private final CustomOAuth2UserService customOAuth2UserService;
     private final UserRepository userRepository;
     private final CorsConfig corsConfig;
@@ -54,7 +58,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .loginPage("/login")
                 .userInfoEndpoint().userService(customOAuth2UserService)
                 .and()
-                .successHandler(customOAuth2SuccessHandler);
+                .successHandler(customOAuth2SuccessHandler)
+                .failureHandler(customOAuth2FailureHandler);
+                //.and().exceptionHandling()
+                //.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED));
 
         http.addFilterBefore(jwtAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
     }

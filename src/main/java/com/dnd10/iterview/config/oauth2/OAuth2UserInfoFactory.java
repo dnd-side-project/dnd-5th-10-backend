@@ -16,7 +16,7 @@ public class OAuth2UserInfoFactory {
       return new GithubOAuth2Info(attributes);
     } else {
       OAuth2Error oauth2Error = new OAuth2Error("oauth2_not_found",
-          "Not supported oauth2 client", null);
+          "해당 소셜로그인 유저가 존재하지 않습니다.", null);
       throw new OAuth2AuthenticationException(oauth2Error, oauth2Error.toString());
     }
   }

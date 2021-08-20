@@ -42,7 +42,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         OAuth2UserInfo oAuth2UserInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(oAuth2UserRequest.getClientRegistration().getRegistrationId(), oAuth2User.getAttributes());
         if(StringUtils.isEmpty(oAuth2UserInfo.getEmail())) {
             OAuth2Error oauth2Error = new OAuth2Error("email_not_found",
-                    "Email not found from OAuth2 provider", null);
+                    "Google 또는 github에 등록되지 않은 이메일입니다.", null);
             throw new OAuth2AuthenticationException(oauth2Error, oauth2Error.toString());
         }
 
@@ -52,7 +52,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             user = userOptional.get();
             if(!user.getProvider().equals(AuthProvider.valueOf(oAuth2UserRequest.getClientRegistration().getRegistrationId()))) {
                 OAuth2Error oauth2Error = new OAuth2Error("wrong_account_provider",
-                        "login with wrong provider email", null);
+                        "이미 다른 소셜로그인에 같은 이메일이 존재합니다. 해당 소셜로 로그인해주세요.", null);
                 throw new OAuth2AuthenticationException(oauth2Error, oauth2Error.toString());
             }
             user = updateExistingUser(user, oAuth2UserInfo);
@@ -86,7 +86,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     private User updateExistingUser(User existingUser, OAuth2UserInfo oAuth2UserInfo) {
         existingUser.update(oAuth2UserInfo.getName());
-        // return userRepository.save(existingUser); ?? update인데 save가 왜있지?
         return existingUser;
     }
 
