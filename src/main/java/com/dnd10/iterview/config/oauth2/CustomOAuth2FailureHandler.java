@@ -17,6 +17,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class CustomOAuth2FailureHandler extends SimpleUrlAuthenticationFailureHandler {
 
+  private final OAuthProperties oAuthProperties;
+  public static final String REDIRECT_PATH = "/login";
+
   @Override
   public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception)
       throws IOException, ServletException {
@@ -37,6 +40,6 @@ public class CustomOAuth2FailureHandler extends SimpleUrlAuthenticationFailureHa
     response.getWriter().write(objectMapper.writeValueAsString(data));
     response.getWriter().flush();
 
-    response.sendRedirect("http://ec2-3-37-137-255.ap-northeast-2.compute.amazonaws.com/");
+    getRedirectStrategy().sendRedirect(request, response, oAuthProperties.getRedirectUrl() + REDIRECT_PATH);
   }
 }
