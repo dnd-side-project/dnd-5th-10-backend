@@ -6,11 +6,20 @@
 IT 면접 지식 공유 플랫폼**
 ![mainPage](image/main.png)
 
+## :date: 개발기간
+**2021.07 ~ 2021.08 (~ 이후에도 개발 예정!)**
+
 ## 아키텍쳐
 ![architecture](image/architecture.png)
 
 ## 사용한 기술 정리
-![dev description](image/description.png)
+![dev description](image/description.png)   
+
+## :computer: 백엔드 팀원
+|이름|깃허브|
+|------|---|
+|😊최상현|[Github](https://github.com/d36choi)|
+|😊이예은|[Github](https://github.com/RulLu16)|
 
 ## 개발 양식
 ### git branch 
