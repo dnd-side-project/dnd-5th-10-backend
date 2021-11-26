@@ -7,7 +7,7 @@ IT 면접 지식 공유 플랫폼**
 ![mainPage](image/main.png)
 
 ## :date: 개발기간
-**2021.07 ~ 2021.08 (~ 릴리즈를 위해 개발 현재진행중!)**
+**2021.07 ~ 2021.08**
 
 ## 아키텍쳐
 ![architecture](image/architecture.png)
